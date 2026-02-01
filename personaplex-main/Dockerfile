@@ -1,25 +1,41 @@
-ARG BASE_IMAGE="nvcr.io/nvidia/cuda"
-ARG BASE_IMAGE_TAG="12.4.1-runtime-ubuntu22.04"
+# Base Image (PyTorch 2.4 + CUDA 12.4)
+FROM pytorch/pytorch:2.4.0-cuda12.4-cudnn9-runtime
 
-FROM ${BASE_IMAGE}:${BASE_IMAGE_TAG} AS base
-
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    pkg-config \
+# 1. System Dependencies
+RUN apt-get update && apt-get install -y \
     libopus-dev \
- && rm -rf /var/lib/apt/lists/*
+    git \
+    git-lfs \
+    && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app/moshi/
+# 2. Set Up Working Directory
+WORKDIR /app
 
-COPY moshi/ /app/moshi/
-RUN uv venv /app/moshi/.venv --python 3.12
-RUN uv sync
+# 3. Copy Code (We copy everything so we can install)
+COPY . /app
 
-RUN mkdir -p /app/ssl
+# 4. Install Python Dependencies
+# (Assumes we are at the root of 'English' repo where 'personaplex-main' is a subfolder)
+RUN pip install --no-cache-dir -e personaplex-main/moshi
+RUN pip install --no-cache-dir huggingface_hub
 
+# 5. Model Weights (BAKED IN)
+# We use a Build ARG so you don't hardcode the token in the file
+ARG HF_TOKEN
+ENV HF_TOKEN=${HF_TOKEN}
+
+# Download the 7B Model to ~/.cache/huggingface
+RUN if [ -n "$HF_TOKEN" ]; then \
+    huggingface-cli login --token $HF_TOKEN && \
+    python3 -c "from huggingface_hub import snapshot_download; snapshot_download('nvidia/personaplex-7b-v1')"; \
+    else \
+    echo "⚠️ WARNING: HF_TOKEN not provided. Model weights will NOT be baked in."; \
+    fi
+
+# 6. Copy Entrypoint
+COPY personaplex-main/entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+# 7. Ports & Start
 EXPOSE 8998
-
-ENTRYPOINT []
-CMD ["/app/moshi/.venv/bin/python", "-m", "moshi.server", "--ssl", "/app/ssl"]
+ENTRYPOINT ["/app/entrypoint.sh"]
