@@ -22,12 +22,17 @@ RUN pip install --no-cache-dir huggingface_hub
 # 5. Model Weights (BAKED IN)
 # We use a Build ARG so you don't hardcode the token in the file
 ARG HF_TOKEN
-ENV HF_TOKEN=${HF_TOKEN}
 
-# Download the 7B Model to ~/.cache/huggingface
+# CRITICAL: Set HF_HOME explicitly so cache is found at runtime
+ENV HF_HOME=/app/.cache/huggingface
+ENV TRANSFORMERS_CACHE=/app/.cache/huggingface
+
+# Download the 7B Model to the explicit cache location
 RUN if [ -n "$HF_TOKEN" ]; then \
+    mkdir -p /app/.cache/huggingface && \
     huggingface-cli login --token $HF_TOKEN && \
-    python3 -c "from huggingface_hub import snapshot_download; snapshot_download('nvidia/personaplex-7b-v1')"; \
+    python3 -c "from huggingface_hub import snapshot_download; snapshot_download('nvidia/personaplex-7b-v1', cache_dir='/app/.cache/huggingface/hub')" && \
+    echo '✅ Model downloaded and cached at /app/.cache/huggingface/hub'; \
     else \
     echo "⚠️ WARNING: HF_TOKEN not provided. Model weights will NOT be baked in."; \
     fi

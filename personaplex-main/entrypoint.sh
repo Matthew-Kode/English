@@ -13,9 +13,8 @@ fi
 
 # 2. Start Server
 echo "🚀 Starting PersonaPlex Server..."
-# We use the baked-in model names
+# The server automatically uses nvidia/personaplex-7b-v1 from the HF cache
+# No need to specify --text-tokenizer or --hf-repo (defaults are correct)
 exec python3 -m moshi.server \
     --host 0.0.0.0 \
-    --port 8998 \
-    --text-tokenizer "nvidia/personaplex-7b-v1" \
-    --moshi-weight "nvidia/personaplex-7b-v1"
+    --port 8998
