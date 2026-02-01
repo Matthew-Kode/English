@@ -31,7 +31,7 @@ jobs:
       # Verify Docker Auth (Fail fast if credentials are invalid)
       - name: Verify Docker Auth
         run: |
-          echo "🔐 Verifying Docker Hub credentials..."
+          echo "🔐 Verifying Docker Hub credentials.."
           docker pull hello-world
           echo "✅ Docker Hub auth is working!"
 
