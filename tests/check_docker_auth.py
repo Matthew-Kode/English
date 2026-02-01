@@ -45,6 +45,7 @@ def main():
                 print(f"   📦 {name}")
                 print(f"      ID: {cred_id}")
                 print(f"      Username: {username}")
+                print(f"      (Full data: {cred})")
                 print()
             
             # Check if RUNPOD_REGISTRY_AUTH_ID in .env matches any

@@ -1,0 +1,1061 @@
+2026-02-01T20:37:36.158275572Z 🔍 Checking for updates from GitHub...
+2026-02-01T20:37:36.305942821Z ⚠️ Git pull failed, using baked-in code.
+2026-02-01T20:37:36.306018440Z 🚀 Starting PersonaPlex Server...
+2026-02-01T20:37:38.037531656Z 2026-02-01 20:37:38,037 - __main__ - INFO - retrieving voice prompts
+2026-02-01T20:37:38.102248124Z 2026-02-01 20:37:38,101 - __main__ - INFO - extracting /root/.cache/huggingface/hub/models--nvidia--personaplex-7b-v1/snapshots/3343b641d663e4c851120b3575cbdfa4cc33e7fa/voices.tgz to /root/.cache/huggingface/hub/models--nvidia--personaplex-7b-v1/snapshots/3343b641d663e4c851120b3575cbdfa4cc33e7fa/voices
+2026-02-01T20:37:38.172582377Z 2026-02-01 20:37:38,172 - __main__ - INFO - voice_prompt_dir = /root/.cache/huggingface/hub/models--nvidia--personaplex-7b-v1/snapshots/3343b641d663e4c851120b3575cbdfa4cc33e7fa/voices
+2026-02-01T20:37:38.172627992Z 2026-02-01 20:37:38,172 - __main__ - INFO - retrieving the static content
+2026-02-01T20:37:38.222248607Z 2026-02-01 20:37:38,221 - __main__ - INFO - static_path = /root/.cache/huggingface/hub/models--nvidia--personaplex-7b-v1/snapshots/3343b641d663e4c851120b3575cbdfa4cc33e7fa/dist
+2026-02-01T20:37:38.509159287Z 2026-02-01 20:37:38,508 - __main__ - INFO - loading mimi
+2026-02-01T20:37:39.830992170Z 2026-02-01 20:37:39,830 - __main__ - INFO - mimi loaded
+2026-02-01T20:37:39.907436634Z 2026-02-01 20:37:39,907 - __main__ - INFO - loading moshi
+2026-02-01T20:37:45.507520011Z 2026-02-01 20:37:45,507 - __main__ - INFO - moshi loaded
+2026-02-01T20:37:45.526116227Z 2026-02-01 20:37:45,525 - __main__ - INFO - warming up the model
+2026-02-01T20:37:47.390962258Z Traceback (most recent call last):
+2026-02-01T20:37:47.391012178Z   File "<frozen runpy>", line 198, in _run_module_as_main
+2026-02-01T20:37:47.391018462Z   File "<frozen runpy>", line 88, in _run_code
+2026-02-01T20:37:47.391023249Z   File "/app/personaplex-main/moshi/moshi/server.py", line 483, in <module>
+2026-02-01T20:37:47.391042405Z     main()
+2026-02-01T20:37:47.391047139Z   File "/app/personaplex-main/moshi/moshi/server.py", line 458, in main
+2026-02-01T20:37:47.391157757Z     state.warmup()
+2026-02-01T20:37:47.391164431Z   File "/app/personaplex-main/moshi/moshi/server.py", line 122, in warmup
+2026-02-01T20:37:47.391213274Z     codes = self.mimi.encode(chunk)
+2026-02-01T20:37:47.391218397Z             ^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.391222701Z   File "/app/personaplex-main/moshi/moshi/models/compression.py", line 378, in encode
+2026-02-01T20:37:47.391314778Z     emb = self._encode_to_unquantized_latent(x)
+2026-02-01T20:37:47.391319836Z           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.391324266Z   File "/app/personaplex-main/moshi/moshi/models/compression.py", line 364, in _encode_to_unquantized_latent
+2026-02-01T20:37:47.391437280Z     (emb,) = state.graphed_tr_enc(emb)
+2026-02-01T20:37:47.391490872Z              ^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.391496225Z   File "/app/personaplex-main/moshi/moshi/utils/compile.py", line 295, in __call__
+2026-02-01T20:37:47.391521455Z     return self.func(*args)
+2026-02-01T20:37:47.391528025Z            ^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.391532726Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+2026-02-01T20:37:47.391753595Z     return self._call_impl(*args, **kwargs)
+2026-02-01T20:37:47.391760935Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.391765348Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+2026-02-01T20:37:47.391959554Z     return forward_call(*args, **kwargs)
+2026-02-01T20:37:47.391969532Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.391973840Z   File "/app/personaplex-main/moshi/moshi/modules/transformer.py", line 767, in forward
+2026-02-01T20:37:47.392092129Z     z = self.transformer(x, *args, **kwargs)
+2026-02-01T20:37:47.392098879Z         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.392103149Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+2026-02-01T20:37:47.392284095Z     return self._call_impl(*args, **kwargs)
+2026-02-01T20:37:47.392289118Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.392316700Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+2026-02-01T20:37:47.392484164Z     return forward_call(*args, **kwargs)
+2026-02-01T20:37:47.392492321Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.392496616Z   File "/app/personaplex-main/moshi/moshi/modules/transformer.py", line 716, in forward
+2026-02-01T20:37:47.392607543Z     x = layer(x, *args, **kwargs)
+2026-02-01T20:37:47.392612880Z         ^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.392617140Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+2026-02-01T20:37:47.392802992Z     return self._call_impl(*args, **kwargs)
+2026-02-01T20:37:47.392808089Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.392812417Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+2026-02-01T20:37:47.392995141Z     return forward_call(*args, **kwargs)
+2026-02-01T20:37:47.392999938Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.393004068Z   File "/app/personaplex-main/moshi/moshi/modules/transformer.py", line 611, in forward
+2026-02-01T20:37:47.393110927Z     x = self._sa_block(x)
+2026-02-01T20:37:47.393116173Z         ^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.393120333Z   File "/app/personaplex-main/moshi/moshi/modules/transformer.py", line 604, in _sa_block
+2026-02-01T20:37:47.393217895Z     update = self.self_attn(x, x, x)
+2026-02-01T20:37:47.393222537Z              ^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.393226979Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+2026-02-01T20:37:47.393412138Z     return self._call_impl(*args, **kwargs)
+2026-02-01T20:37:47.393417264Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.393421484Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+2026-02-01T20:37:47.393602983Z     return forward_call(*args, **kwargs)
+2026-02-01T20:37:47.393607797Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.393611957Z   File "/app/personaplex-main/moshi/moshi/modules/transformer.py", line 423, in forward
+2026-02-01T20:37:47.393691194Z     q, k = self.rope(q, k, offset, time_before_heads=False)
+2026-02-01T20:37:47.393705634Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.393710294Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+2026-02-01T20:37:47.393900468Z     return self._call_impl(*args, **kwargs)
+2026-02-01T20:37:47.393907755Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.393912935Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+2026-02-01T20:37:47.394088727Z     return forward_call(*args, **kwargs)
+2026-02-01T20:37:47.394095147Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.394099274Z   File "/app/personaplex-main/moshi/moshi/modules/rope.py", line 111, in forward
+2026-02-01T20:37:47.394142594Z     return apply_rope(q, k, offset, self.max_period, time_before_heads)
+2026-02-01T20:37:47.394157220Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.394161961Z   File "/app/personaplex-main/moshi/moshi/utils/compile.py", line 73, in _wrapped
+2026-02-01T20:37:47.394219734Z     return fun_compiled(*args, **kwargs)
+2026-02-01T20:37:47.394226459Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.394230786Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/eval_frame.py", line 433, in _fn
+2026-02-01T20:37:47.394310280Z     return fn(*args, **kwargs)
+2026-02-01T20:37:47.394316756Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.394321019Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/convert_frame.py", line 1116, in __call__
+2026-02-01T20:37:47.394466878Z     return self._torchdynamo_orig_callable(
+2026-02-01T20:37:47.394471565Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.394475685Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/convert_frame.py", line 948, in __call__
+2026-02-01T20:37:47.394597659Z     result = self._inner_convert(
+2026-02-01T20:37:47.394605308Z              ^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.394609628Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/convert_frame.py", line 472, in __call__
+2026-02-01T20:37:47.394664014Z     return _compile(
+2026-02-01T20:37:47.394675574Z            ^^^^^^^^^
+2026-02-01T20:37:47.394679948Z   File "/opt/conda/lib/python3.11/site-packages/torch/_utils_internal.py", line 84, in wrapper_function
+2026-02-01T20:37:47.394716264Z     return StrobelightCompileTimeProfiler.profile_compile_time(
+2026-02-01T20:37:47.394722496Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.394727148Z   File "/opt/conda/lib/python3.11/site-packages/torch/_strobelight/compile_time_profiler.py", line 129, in profile_compile_time
+2026-02-01T20:37:47.394755808Z     return func(*args, **kwargs)
+2026-02-01T20:37:47.394761926Z            ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.394766796Z   File "/opt/conda/lib/python3.11/contextlib.py", line 81, in inner
+2026-02-01T20:37:47.394805323Z     return func(*args, **kwds)
+2026-02-01T20:37:47.394810057Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.394814406Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/convert_frame.py", line 817, in _compile
+2026-02-01T20:37:47.394939415Z     guarded_code = compile_inner(code, one_graph, hooks, transform)
+2026-02-01T20:37:47.394944132Z                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.394948226Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/utils.py", line 231, in time_wrapper
+2026-02-01T20:37:47.395005009Z     r = func(*args, **kwargs)
+2026-02-01T20:37:47.395009886Z         ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.395014119Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/convert_frame.py", line 636, in compile_inner
+2026-02-01T20:37:47.395109621Z     out_code = transform_code_object(code, transform)
+2026-02-01T20:37:47.395114591Z                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.395118766Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/bytecode_transformation.py", line 1185, in transform_code_object
+2026-02-01T20:37:47.395271865Z     transformations(instructions, code_options)
+2026-02-01T20:37:47.395276813Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/convert_frame.py", line 178, in _fn
+2026-02-01T20:37:47.395319957Z     return fn(*args, **kwargs)
+2026-02-01T20:37:47.395324597Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.395329087Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/convert_frame.py", line 582, in transform
+2026-02-01T20:37:47.395417984Z     tracer.run()
+2026-02-01T20:37:47.395422854Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/symbolic_convert.py", line 2451, in run
+2026-02-01T20:37:47.395711095Z     super().run()
+2026-02-01T20:37:47.395722975Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/symbolic_convert.py", line 893, in run
+2026-02-01T20:37:47.395840124Z     while self.step():
+2026-02-01T20:37:47.395844801Z           ^^^^^^^^^^^
+2026-02-01T20:37:47.395849141Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/symbolic_convert.py", line 805, in step
+2026-02-01T20:37:47.395957461Z     self.dispatch_table[inst.opcode](self, inst)
+2026-02-01T20:37:47.395962193Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/symbolic_convert.py", line 2642, in RETURN_VALUE
+2026-02-01T20:37:47.396257505Z     self._return(inst)
+2026-02-01T20:37:47.396262869Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/symbolic_convert.py", line 2627, in _return
+2026-02-01T20:37:47.396544790Z     self.output.compile_subgraph(
+2026-02-01T20:37:47.396550433Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/output_graph.py", line 1123, in compile_subgraph
+2026-02-01T20:37:47.396695312Z     self.compile_and_call_fx_graph(tx, pass2.graph_output_vars(), root)
+2026-02-01T20:37:47.396700186Z   File "/opt/conda/lib/python3.11/contextlib.py", line 81, in inner
+2026-02-01T20:37:47.396737466Z     return func(*args, **kwds)
+2026-02-01T20:37:47.396751779Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.396763512Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/output_graph.py", line 1318, in compile_and_call_fx_graph
+2026-02-01T20:37:47.396956315Z     compiled_fn = self.call_user_compiler(gm)
+2026-02-01T20:37:47.396977730Z                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.396985015Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/utils.py", line 231, in time_wrapper
+2026-02-01T20:37:47.396992975Z     r = func(*args, **kwargs)
+2026-02-01T20:37:47.396998003Z         ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.397002360Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/output_graph.py", line 1409, in call_user_compiler
+2026-02-01T20:37:47.397160042Z     raise BackendCompilerFailed(self.compiler_fn, e).with_traceback(
+2026-02-01T20:37:47.397165449Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/output_graph.py", line 1390, in call_user_compiler
+2026-02-01T20:37:47.397335513Z     compiled_fn = compiler_fn(gm, self.example_inputs())
+2026-02-01T20:37:47.397340788Z                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.397344951Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/repro/after_dynamo.py", line 129, in __call__
+2026-02-01T20:37:47.397401648Z     compiled_gm = compiler_fn(gm, example_inputs)
+2026-02-01T20:37:47.397408132Z                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.397412431Z   File "/opt/conda/lib/python3.11/site-packages/torch/__init__.py", line 1951, in __call__
+2026-02-01T20:37:47.397642791Z     return compile_fx(model_, inputs_, config_patches=self.config)
+2026-02-01T20:37:47.397648064Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.397652161Z   File "/opt/conda/lib/python3.11/contextlib.py", line 81, in inner
+2026-02-01T20:37:47.397688751Z     return func(*args, **kwds)
+2026-02-01T20:37:47.397693573Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.397714879Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/compile_fx.py", line 1505, in compile_fx
+2026-02-01T20:37:47.397903575Z     return aot_autograd(
+2026-02-01T20:37:47.397909942Z            ^^^^^^^^^^^^^
+2026-02-01T20:37:47.397914225Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/backends/common.py", line 69, in __call__
+2026-02-01T20:37:47.397937242Z     cg = aot_module_simplified(gm, example_inputs, **self.kwargs)
+2026-02-01T20:37:47.397957868Z          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.397962398Z   File "/opt/conda/lib/python3.11/site-packages/torch/_functorch/aot_autograd.py", line 954, in aot_module_simplified
+2026-02-01T20:37:47.398100868Z     compiled_fn, _ = create_aot_dispatcher_function(
+2026-02-01T20:37:47.398106137Z                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.398110318Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/utils.py", line 231, in time_wrapper
+2026-02-01T20:37:47.398155216Z     r = func(*args, **kwargs)
+2026-02-01T20:37:47.398159918Z         ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.398164178Z   File "/opt/conda/lib/python3.11/site-packages/torch/_functorch/aot_autograd.py", line 687, in create_aot_dispatcher_function
+2026-02-01T20:37:47.398274496Z     compiled_fn, fw_metadata = compiler_fn(
+2026-02-01T20:37:47.398279436Z                                ^^^^^^^^^^^^
+2026-02-01T20:37:47.398283867Z   File "/opt/conda/lib/python3.11/site-packages/torch/_functorch/_aot_autograd/jit_compile_runtime_wrappers.py", line 168, in aot_dispatch_base
+2026-02-01T20:37:47.398327773Z     compiled_fw = compiler(fw_module, updated_flat_args)
+2026-02-01T20:37:47.398344210Z                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.398348950Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/utils.py", line 231, in time_wrapper
+2026-02-01T20:37:47.398411712Z     r = func(*args, **kwargs)
+2026-02-01T20:37:47.398419545Z         ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.398424369Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/compile_fx.py", line 1410, in fw_compiler_base
+2026-02-01T20:37:47.398590975Z     return inner_compile(
+2026-02-01T20:37:47.398597525Z            ^^^^^^^^^^^^^^
+2026-02-01T20:37:47.398609671Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/repro/after_aot.py", line 84, in debug_wrapper
+2026-02-01T20:37:47.398631634Z     inner_compiled_fn = compiler_fn(gm, example_inputs)
+2026-02-01T20:37:47.398639325Z                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.398643831Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/debug.py", line 304, in inner
+2026-02-01T20:37:47.398704485Z     return fn(*args, **kwargs)
+2026-02-01T20:37:47.398709407Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.398714017Z   File "/opt/conda/lib/python3.11/contextlib.py", line 81, in inner
+2026-02-01T20:37:47.398754080Z     return func(*args, **kwds)
+2026-02-01T20:37:47.398760954Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.398765650Z   File "/opt/conda/lib/python3.11/contextlib.py", line 81, in inner
+2026-02-01T20:37:47.398786764Z     return func(*args, **kwds)
+2026-02-01T20:37:47.398808013Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.398814183Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/utils.py", line 231, in time_wrapper
+2026-02-01T20:37:47.398854654Z     r = func(*args, **kwargs)
+2026-02-01T20:37:47.398860012Z         ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.398864224Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/compile_fx.py", line 527, in compile_fx_inner
+2026-02-01T20:37:47.398956336Z     compiled_graph = fx_codegen_and_compile(
+2026-02-01T20:37:47.398961833Z                      ^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.398966012Z   File "/opt/conda/lib/python3.11/contextlib.py", line 81, in inner
+2026-02-01T20:37:47.398990213Z     return func(*args, **kwds)
+2026-02-01T20:37:47.398995443Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.399000199Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/compile_fx.py", line 831, in fx_codegen_and_compile
+2026-02-01T20:37:47.399118115Z     compiled_fn = graph.compile_to_fn()
+2026-02-01T20:37:47.399125051Z                   ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.399129385Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/graph.py", line 1749, in compile_to_fn
+2026-02-01T20:37:47.399340217Z     return self.compile_to_module().call
+2026-02-01T20:37:47.399345797Z            ^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.399350061Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/utils.py", line 231, in time_wrapper
+2026-02-01T20:37:47.399392371Z     r = func(*args, **kwargs)
+2026-02-01T20:37:47.399397421Z         ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.399401593Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/graph.py", line 1678, in compile_to_module
+2026-02-01T20:37:47.399620588Z     self.codegen_with_cpp_wrapper() if self.cpp_wrapper else self.codegen()
+2026-02-01T20:37:47.399639822Z                                                              ^^^^^^^^^^^^^^
+2026-02-01T20:37:47.399644129Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/graph.py", line 1638, in codegen
+2026-02-01T20:37:47.399821511Z     self.scheduler.codegen()
+2026-02-01T20:37:47.399827024Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/utils.py", line 231, in time_wrapper
+2026-02-01T20:37:47.399870468Z     r = func(*args, **kwargs)
+2026-02-01T20:37:47.399875191Z         ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.399879546Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/scheduler.py", line 2741, in codegen
+2026-02-01T20:37:47.400200982Z     self.get_backend(device).codegen_node(node)
+2026-02-01T20:37:47.400205791Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/codegen/cuda_combined_scheduling.py", line 69, in codegen_node
+2026-02-01T20:37:47.400250696Z     return self._triton_scheduling.codegen_node(node)
+2026-02-01T20:37:47.400255374Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.400259435Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/codegen/simd.py", line 1148, in codegen_node
+2026-02-01T20:37:47.400421854Z     return self.codegen_node_schedule(node_schedule, buf_accesses, numel, rnumel)
+2026-02-01T20:37:47.400426584Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.400437157Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/codegen/simd.py", line 1317, in codegen_node_schedule
+2026-02-01T20:37:47.400604962Z     src_code = kernel.codegen_kernel()
+2026-02-01T20:37:47.400611103Z                ^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.400615446Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/codegen/triton.py", line 2159, in codegen_kernel
+2026-02-01T20:37:47.400863178Z     **self.inductor_meta_common(),
+2026-02-01T20:37:47.400868712Z       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.400872908Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/codegen/triton.py", line 2047, in inductor_meta_common
+2026-02-01T20:37:47.401109983Z     "backend_hash": torch.utils._triton.triton_hash_with_backend(),
+2026-02-01T20:37:47.401114853Z                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.401118966Z   File "/opt/conda/lib/python3.11/site-packages/torch/utils/_triton.py", line 63, in triton_hash_with_backend
+2026-02-01T20:37:47.401150810Z     backend = triton_backend()
+2026-02-01T20:37:47.401155346Z               ^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.401159990Z   File "/opt/conda/lib/python3.11/site-packages/torch/utils/_triton.py", line 49, in triton_backend
+2026-02-01T20:37:47.401198230Z     target = driver.active.get_current_target()
+2026-02-01T20:37:47.401203128Z              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.401207358Z   File "/opt/conda/lib/python3.11/site-packages/triton/runtime/driver.py", line 23, in __getattr__
+2026-02-01T20:37:47.401238230Z     self._initialize_obj()
+2026-02-01T20:37:47.401254345Z   File "/opt/conda/lib/python3.11/site-packages/triton/runtime/driver.py", line 20, in _initialize_obj
+2026-02-01T20:37:47.401287229Z     self._obj = self._init_fn()
+2026-02-01T20:37:47.401293439Z                 ^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.401298008Z   File "/opt/conda/lib/python3.11/site-packages/triton/runtime/driver.py", line 9, in _create_driver
+2026-02-01T20:37:47.401323252Z     return actives[0]()
+2026-02-01T20:37:47.401328755Z            ^^^^^^^^^^^^
+2026-02-01T20:37:47.401332945Z   File "/opt/conda/lib/python3.11/site-packages/triton/backends/nvidia/driver.py", line 371, in __init__
+2026-02-01T20:37:47.401408167Z     self.utils = CudaUtils()  # TODO: make static
+2026-02-01T20:37:47.401415424Z                  ^^^^^^^^^^^
+2026-02-01T20:37:47.401419811Z   File "/opt/conda/lib/python3.11/site-packages/triton/backends/nvidia/driver.py", line 80, in __init__
+2026-02-01T20:37:47.401443377Z     mod = compile_module_from_src(Path(os.path.join(dirname, "driver.c")).read_text(), "cuda_utils")
+2026-02-01T20:37:47.401484574Z           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.401489478Z   File "/opt/conda/lib/python3.11/site-packages/triton/backends/nvidia/driver.py", line 57, in compile_module_from_src
+2026-02-01T20:37:47.401509378Z     so = _build(name, src_path, tmpdir, library_dirs(), include_dir, libraries)
+2026-02-01T20:37:47.401549131Z          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:37:47.401555438Z   File "/opt/conda/lib/python3.11/site-packages/triton/runtime/build.py", line 32, in _build
+2026-02-01T20:37:47.401569570Z     raise RuntimeError("Failed to find C compiler. Please specify via CC environment variable.")
+2026-02-01T20:37:47.401584020Z torch._dynamo.exc.BackendCompilerFailed: backend='inductor' raised:
+2026-02-01T20:37:47.401590936Z RuntimeError: Failed to find C compiler. Please specify via CC environment variable.
+2026-02-01T20:37:47.401599693Z Set TORCH_LOGS="+dynamo" and TORCHDYNAMO_VERBOSE=1 for more information
+2026-02-01T20:37:47.401612556Z You can suppress this exception and fall back to eager by setting:
+2026-02-01T20:37:47.401616726Z     import torch._dynamo
+2026-02-01T20:37:47.401621023Z     torch._dynamo.config.suppress_errors = True
+2026-02-01T20:37:55.063646390Z 🔍 Checking for updates from GitHub...
+2026-02-01T20:37:55.203041768Z ⚠️ Git pull failed, using baked-in code.
+2026-02-01T20:37:55.203107150Z 🚀 Starting PersonaPlex Server...
+2026-02-01T20:37:57.106043724Z 2026-02-01 20:37:57,105 - __main__ - INFO - retrieving voice prompts
+2026-02-01T20:37:57.173404581Z 2026-02-01 20:37:57,172 - __main__ - INFO - voice_prompt_dir = /root/.cache/huggingface/hub/models--nvidia--personaplex-7b-v1/snapshots/3343b641d663e4c851120b3575cbdfa4cc33e7fa/voices
+2026-02-01T20:37:57.173449755Z 2026-02-01 20:37:57,173 - __main__ - INFO - retrieving the static content
+2026-02-01T20:37:57.210879516Z 2026-02-01 20:37:57,210 - __main__ - INFO - static_path = /root/.cache/huggingface/hub/models--nvidia--personaplex-7b-v1/snapshots/3343b641d663e4c851120b3575cbdfa4cc33e7fa/dist
+2026-02-01T20:37:57.414598395Z 2026-02-01 20:37:57,414 - __main__ - INFO - loading mimi
+2026-02-01T20:37:59.102154898Z 2026-02-01 20:37:59,101 - __main__ - INFO - mimi loaded
+2026-02-01T20:37:59.183085793Z 2026-02-01 20:37:59,182 - __main__ - INFO - loading moshi
+2026-02-01T20:38:05.385324571Z 2026-02-01 20:38:05,384 - __main__ - INFO - moshi loaded
+2026-02-01T20:38:05.403897459Z 2026-02-01 20:38:05,403 - __main__ - INFO - warming up the model
+2026-02-01T20:38:07.247368951Z Traceback (most recent call last):
+2026-02-01T20:38:07.247420801Z   File "<frozen runpy>", line 198, in _run_module_as_main
+2026-02-01T20:38:07.247426934Z   File "<frozen runpy>", line 88, in _run_code
+2026-02-01T20:38:07.247431791Z   File "/app/personaplex-main/moshi/moshi/server.py", line 483, in <module>
+2026-02-01T20:38:07.247509120Z     main()
+2026-02-01T20:38:07.247552940Z   File "/app/personaplex-main/moshi/moshi/server.py", line 458, in main
+2026-02-01T20:38:07.247559267Z     state.warmup()
+2026-02-01T20:38:07.247564590Z   File "/app/personaplex-main/moshi/moshi/server.py", line 122, in warmup
+2026-02-01T20:38:07.247571363Z     codes = self.mimi.encode(chunk)
+2026-02-01T20:38:07.247576600Z             ^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.247581204Z   File "/app/personaplex-main/moshi/moshi/models/compression.py", line 378, in encode
+2026-02-01T20:38:07.247915462Z     emb = self._encode_to_unquantized_latent(x)
+2026-02-01T20:38:07.247933572Z           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.247938602Z   File "/app/personaplex-main/moshi/moshi/models/compression.py", line 364, in _encode_to_unquantized_latent
+2026-02-01T20:38:07.247944572Z     (emb,) = state.graphed_tr_enc(emb)
+2026-02-01T20:38:07.247949295Z              ^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.247953675Z   File "/app/personaplex-main/moshi/moshi/utils/compile.py", line 295, in __call__
+2026-02-01T20:38:07.247958058Z     return self.func(*args)
+2026-02-01T20:38:07.247963978Z            ^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.247969595Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+2026-02-01T20:38:07.248085140Z     return self._call_impl(*args, **kwargs)
+2026-02-01T20:38:07.248093074Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.248097591Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+2026-02-01T20:38:07.248430275Z     return forward_call(*args, **kwargs)
+2026-02-01T20:38:07.248448409Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.248453198Z   File "/app/personaplex-main/moshi/moshi/modules/transformer.py", line 767, in forward
+2026-02-01T20:38:07.248458079Z     z = self.transformer(x, *args, **kwargs)
+2026-02-01T20:38:07.248462579Z         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.248467199Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+2026-02-01T20:38:07.248733703Z     return self._call_impl(*args, **kwargs)
+2026-02-01T20:38:07.248751750Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.248756713Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+2026-02-01T20:38:07.248818770Z     return forward_call(*args, **kwargs)
+2026-02-01T20:38:07.248824053Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.248828487Z   File "/app/personaplex-main/moshi/moshi/modules/transformer.py", line 716, in forward
+2026-02-01T20:38:07.248836210Z     x = layer(x, *args, **kwargs)
+2026-02-01T20:38:07.248857007Z         ^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.248861862Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+2026-02-01T20:38:07.249248193Z     return self._call_impl(*args, **kwargs)
+2026-02-01T20:38:07.249266534Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.249271470Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+2026-02-01T20:38:07.249276174Z     return forward_call(*args, **kwargs)
+2026-02-01T20:38:07.249281043Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.249285490Z   File "/app/personaplex-main/moshi/moshi/modules/transformer.py", line 611, in forward
+2026-02-01T20:38:07.249577045Z     x = self._sa_block(x)
+2026-02-01T20:38:07.249595265Z         ^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.249600345Z   File "/app/personaplex-main/moshi/moshi/modules/transformer.py", line 604, in _sa_block
+2026-02-01T20:38:07.249605122Z     update = self.self_attn(x, x, x)
+2026-02-01T20:38:07.249609465Z              ^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.249614401Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+2026-02-01T20:38:07.249677922Z     return self._call_impl(*args, **kwargs)
+2026-02-01T20:38:07.249682838Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.249687472Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+2026-02-01T20:38:07.250048525Z     return forward_call(*args, **kwargs)
+2026-02-01T20:38:07.250066545Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.250071828Z   File "/app/personaplex-main/moshi/moshi/modules/transformer.py", line 423, in forward
+2026-02-01T20:38:07.250076438Z     q, k = self.rope(q, k, offset, time_before_heads=False)
+2026-02-01T20:38:07.250080902Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.250085348Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+2026-02-01T20:38:07.250156088Z     return self._call_impl(*args, **kwargs)
+2026-02-01T20:38:07.250161028Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.250165242Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+2026-02-01T20:38:07.250516890Z     return forward_call(*args, **kwargs)
+2026-02-01T20:38:07.250535057Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.250539913Z   File "/app/personaplex-main/moshi/moshi/modules/rope.py", line 111, in forward
+2026-02-01T20:38:07.250544365Z     return apply_rope(q, k, offset, self.max_period, time_before_heads)
+2026-02-01T20:38:07.250548617Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.250552780Z   File "/app/personaplex-main/moshi/moshi/utils/compile.py", line 73, in _wrapped
+2026-02-01T20:38:07.250557450Z     return fun_compiled(*args, **kwargs)
+2026-02-01T20:38:07.250562017Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.250566182Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/eval_frame.py", line 433, in _fn
+2026-02-01T20:38:07.250570557Z     return fn(*args, **kwargs)
+2026-02-01T20:38:07.250574950Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.250579419Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/convert_frame.py", line 1116, in __call__
+2026-02-01T20:38:07.250866345Z     return self._torchdynamo_orig_callable(
+2026-02-01T20:38:07.250884735Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.250889861Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/convert_frame.py", line 948, in __call__
+2026-02-01T20:38:07.250894605Z     result = self._inner_convert(
+2026-02-01T20:38:07.250899185Z              ^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.250903575Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/convert_frame.py", line 472, in __call__
+2026-02-01T20:38:07.250947240Z     return _compile(
+2026-02-01T20:38:07.250953054Z            ^^^^^^^^^
+2026-02-01T20:38:07.250957523Z   File "/opt/conda/lib/python3.11/site-packages/torch/_utils_internal.py", line 84, in wrapper_function
+2026-02-01T20:38:07.250976554Z     return StrobelightCompileTimeProfiler.profile_compile_time(
+2026-02-01T20:38:07.250981300Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.250985637Z   File "/opt/conda/lib/python3.11/site-packages/torch/_strobelight/compile_time_profiler.py", line 129, in profile_compile_time
+2026-02-01T20:38:07.250989897Z     return func(*args, **kwargs)
+2026-02-01T20:38:07.250995024Z            ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.250999427Z   File "/opt/conda/lib/python3.11/contextlib.py", line 81, in inner
+2026-02-01T20:38:07.251003684Z     return func(*args, **kwds)
+2026-02-01T20:38:07.251007883Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.251012354Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/convert_frame.py", line 817, in _compile
+2026-02-01T20:38:07.251287263Z     guarded_code = compile_inner(code, one_graph, hooks, transform)
+2026-02-01T20:38:07.251305688Z                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.251310481Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/utils.py", line 231, in time_wrapper
+2026-02-01T20:38:07.251315071Z     r = func(*args, **kwargs)
+2026-02-01T20:38:07.251319751Z         ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.251324648Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/convert_frame.py", line 636, in compile_inner
+2026-02-01T20:38:07.251329981Z     out_code = transform_code_object(code, transform)
+2026-02-01T20:38:07.251334401Z                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.251338658Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/bytecode_transformation.py", line 1185, in transform_code_object
+2026-02-01T20:38:07.251357652Z     transformations(instructions, code_options)
+2026-02-01T20:38:07.251362481Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/convert_frame.py", line 178, in _fn
+2026-02-01T20:38:07.251420082Z     return fn(*args, **kwargs)
+2026-02-01T20:38:07.251425420Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.251429960Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/convert_frame.py", line 582, in transform
+2026-02-01T20:38:07.251840385Z     tracer.run()
+2026-02-01T20:38:07.251869199Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/symbolic_convert.py", line 2451, in run
+2026-02-01T20:38:07.252086356Z     super().run()
+2026-02-01T20:38:07.252105171Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/symbolic_convert.py", line 893, in run
+2026-02-01T20:38:07.252110843Z     while self.step():
+2026-02-01T20:38:07.252115478Z           ^^^^^^^^^^^
+2026-02-01T20:38:07.252120078Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/symbolic_convert.py", line 805, in step
+2026-02-01T20:38:07.252206416Z     self.dispatch_table[inst.opcode](self, inst)
+2026-02-01T20:38:07.252212723Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/symbolic_convert.py", line 2642, in RETURN_VALUE
+2026-02-01T20:38:07.252583271Z     self._return(inst)
+2026-02-01T20:38:07.252602398Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/symbolic_convert.py", line 2627, in _return
+2026-02-01T20:38:07.252907593Z     self.output.compile_subgraph(
+2026-02-01T20:38:07.252926292Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/output_graph.py", line 1123, in compile_subgraph
+2026-02-01T20:38:07.252931692Z     self.compile_and_call_fx_graph(tx, pass2.graph_output_vars(), root)
+2026-02-01T20:38:07.252936203Z   File "/opt/conda/lib/python3.11/contextlib.py", line 81, in inner
+2026-02-01T20:38:07.252940513Z     return func(*args, **kwds)
+2026-02-01T20:38:07.252944906Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.252949873Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/output_graph.py", line 1318, in compile_and_call_fx_graph
+2026-02-01T20:38:07.253247121Z     compiled_fn = self.call_user_compiler(gm)
+2026-02-01T20:38:07.253265260Z                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.253270247Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/utils.py", line 231, in time_wrapper
+2026-02-01T20:38:07.253275067Z     r = func(*args, **kwargs)
+2026-02-01T20:38:07.253294044Z         ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.253298954Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/output_graph.py", line 1409, in call_user_compiler
+2026-02-01T20:38:07.253389503Z     raise BackendCompilerFailed(self.compiler_fn, e).with_traceback(
+2026-02-01T20:38:07.253394760Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/output_graph.py", line 1390, in call_user_compiler
+2026-02-01T20:38:07.253455823Z     compiled_fn = compiler_fn(gm, self.example_inputs())
+2026-02-01T20:38:07.253474748Z                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.253479685Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/repro/after_dynamo.py", line 129, in __call__
+2026-02-01T20:38:07.253497283Z     compiled_gm = compiler_fn(gm, example_inputs)
+2026-02-01T20:38:07.253502260Z                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.253506545Z   File "/opt/conda/lib/python3.11/site-packages/torch/__init__.py", line 1951, in __call__
+2026-02-01T20:38:07.253905637Z     return compile_fx(model_, inputs_, config_patches=self.config)
+2026-02-01T20:38:07.253923923Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.253928733Z   File "/opt/conda/lib/python3.11/contextlib.py", line 81, in inner
+2026-02-01T20:38:07.253933057Z     return func(*args, **kwds)
+2026-02-01T20:38:07.253938190Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.253942896Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/compile_fx.py", line 1505, in compile_fx
+2026-02-01T20:38:07.254249995Z     return aot_autograd(
+2026-02-01T20:38:07.254273091Z            ^^^^^^^^^^^^^
+2026-02-01T20:38:07.254278344Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/backends/common.py", line 69, in __call__
+2026-02-01T20:38:07.254283551Z     cg = aot_module_simplified(gm, example_inputs, **self.kwargs)
+2026-02-01T20:38:07.254288404Z          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.254293224Z   File "/opt/conda/lib/python3.11/site-packages/torch/_functorch/aot_autograd.py", line 954, in aot_module_simplified
+2026-02-01T20:38:07.254312501Z     compiled_fn, _ = create_aot_dispatcher_function(
+2026-02-01T20:38:07.254317253Z                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.254322045Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/utils.py", line 231, in time_wrapper
+2026-02-01T20:38:07.254326388Z     r = func(*args, **kwargs)
+2026-02-01T20:38:07.254331865Z         ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.254336418Z   File "/opt/conda/lib/python3.11/site-packages/torch/_functorch/aot_autograd.py", line 687, in create_aot_dispatcher_function
+2026-02-01T20:38:07.254378135Z     compiled_fn, fw_metadata = compiler_fn(
+2026-02-01T20:38:07.254396723Z                                ^^^^^^^^^^^^
+2026-02-01T20:38:07.254402504Z   File "/opt/conda/lib/python3.11/site-packages/torch/_functorch/_aot_autograd/jit_compile_runtime_wrappers.py", line 168, in aot_dispatch_base
+2026-02-01T20:38:07.254704683Z     compiled_fw = compiler(fw_module, updated_flat_args)
+2026-02-01T20:38:07.254722915Z                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.254728042Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/utils.py", line 231, in time_wrapper
+2026-02-01T20:38:07.254733125Z     r = func(*args, **kwargs)
+2026-02-01T20:38:07.254737808Z         ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.254742305Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/compile_fx.py", line 1410, in fw_compiler_base
+2026-02-01T20:38:07.254782065Z     return inner_compile(
+2026-02-01T20:38:07.254786928Z            ^^^^^^^^^^^^^^
+2026-02-01T20:38:07.254791365Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/repro/after_aot.py", line 84, in debug_wrapper
+2026-02-01T20:38:07.254795925Z     inner_compiled_fn = compiler_fn(gm, example_inputs)
+2026-02-01T20:38:07.254800785Z                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.254805268Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/debug.py", line 304, in inner
+2026-02-01T20:38:07.254824052Z     return fn(*args, **kwargs)
+2026-02-01T20:38:07.254828838Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.254833305Z   File "/opt/conda/lib/python3.11/contextlib.py", line 81, in inner
+2026-02-01T20:38:07.254844865Z     return func(*args, **kwds)
+2026-02-01T20:38:07.254849492Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.254853770Z   File "/opt/conda/lib/python3.11/contextlib.py", line 81, in inner
+2026-02-01T20:38:07.254879850Z     return func(*args, **kwds)
+2026-02-01T20:38:07.254898987Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.254904330Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/utils.py", line 231, in time_wrapper
+2026-02-01T20:38:07.254922724Z     r = func(*args, **kwargs)
+2026-02-01T20:38:07.254928271Z         ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.254932707Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/compile_fx.py", line 527, in compile_fx_inner
+2026-02-01T20:38:07.255165603Z     compiled_graph = fx_codegen_and_compile(
+2026-02-01T20:38:07.255183740Z                      ^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.255188756Z   File "/opt/conda/lib/python3.11/contextlib.py", line 81, in inner
+2026-02-01T20:38:07.255193453Z     return func(*args, **kwds)
+2026-02-01T20:38:07.255198075Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.255202885Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/compile_fx.py", line 831, in fx_codegen_and_compile
+2026-02-01T20:38:07.255207565Z     compiled_fn = graph.compile_to_fn()
+2026-02-01T20:38:07.255212233Z                   ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.255230705Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/graph.py", line 1749, in compile_to_fn
+2026-02-01T20:38:07.255524416Z     return self.compile_to_module().call
+2026-02-01T20:38:07.255552428Z            ^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.255558116Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/utils.py", line 231, in time_wrapper
+2026-02-01T20:38:07.255562686Z     r = func(*args, **kwargs)
+2026-02-01T20:38:07.255567716Z         ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.255572388Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/graph.py", line 1678, in compile_to_module
+2026-02-01T20:38:07.255842729Z     self.codegen_with_cpp_wrapper() if self.cpp_wrapper else self.codegen()
+2026-02-01T20:38:07.255860976Z                                                              ^^^^^^^^^^^^^^
+2026-02-01T20:38:07.255865809Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/graph.py", line 1638, in codegen
+2026-02-01T20:38:07.255883654Z     self.scheduler.codegen()
+2026-02-01T20:38:07.255889251Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/utils.py", line 231, in time_wrapper
+2026-02-01T20:38:07.255923028Z     r = func(*args, **kwargs)
+2026-02-01T20:38:07.255928051Z         ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.255932448Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/scheduler.py", line 2741, in codegen
+2026-02-01T20:38:07.256385456Z     self.get_backend(device).codegen_node(node)
+2026-02-01T20:38:07.256403681Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/codegen/cuda_combined_scheduling.py", line 69, in codegen_node
+2026-02-01T20:38:07.256409278Z     return self._triton_scheduling.codegen_node(node)
+2026-02-01T20:38:07.256413948Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.256422063Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/codegen/simd.py", line 1148, in codegen_node
+2026-02-01T20:38:07.256480852Z     return self.codegen_node_schedule(node_schedule, buf_accesses, numel, rnumel)
+2026-02-01T20:38:07.256486505Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.256490902Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/codegen/simd.py", line 1317, in codegen_node_schedule
+2026-02-01T20:38:07.256762231Z     src_code = kernel.codegen_kernel()
+2026-02-01T20:38:07.256780586Z                ^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.256785486Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/codegen/triton.py", line 2159, in codegen_kernel
+2026-02-01T20:38:07.257060507Z     **self.inductor_meta_common(),
+2026-02-01T20:38:07.257078757Z       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.257083814Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/codegen/triton.py", line 2047, in inductor_meta_common
+2026-02-01T20:38:07.257147868Z     "backend_hash": torch.utils._triton.triton_hash_with_backend(),
+2026-02-01T20:38:07.257153121Z                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.257157477Z   File "/opt/conda/lib/python3.11/site-packages/torch/utils/_triton.py", line 63, in triton_hash_with_backend
+2026-02-01T20:38:07.257245281Z     backend = triton_backend()
+2026-02-01T20:38:07.257264073Z               ^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.257269298Z   File "/opt/conda/lib/python3.11/site-packages/torch/utils/_triton.py", line 49, in triton_backend
+2026-02-01T20:38:07.257274396Z     target = driver.active.get_current_target()
+2026-02-01T20:38:07.257278981Z              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.257283608Z   File "/opt/conda/lib/python3.11/site-packages/triton/runtime/driver.py", line 23, in __getattr__
+2026-02-01T20:38:07.257299708Z     self._initialize_obj()
+2026-02-01T20:38:07.257304343Z   File "/opt/conda/lib/python3.11/site-packages/triton/runtime/driver.py", line 20, in _initialize_obj
+2026-02-01T20:38:07.257335727Z     self._obj = self._init_fn()
+2026-02-01T20:38:07.257340326Z                 ^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.257344743Z   File "/opt/conda/lib/python3.11/site-packages/triton/runtime/driver.py", line 9, in _create_driver
+2026-02-01T20:38:07.257374116Z     return actives[0]()
+2026-02-01T20:38:07.257378777Z            ^^^^^^^^^^^^
+2026-02-01T20:38:07.257382946Z   File "/opt/conda/lib/python3.11/site-packages/triton/backends/nvidia/driver.py", line 371, in __init__
+2026-02-01T20:38:07.257647931Z     self.utils = CudaUtils()  # TODO: make static
+2026-02-01T20:38:07.257666095Z                  ^^^^^^^^^^^
+2026-02-01T20:38:07.257672275Z   File "/opt/conda/lib/python3.11/site-packages/triton/backends/nvidia/driver.py", line 80, in __init__
+2026-02-01T20:38:07.257676918Z     mod = compile_module_from_src(Path(os.path.join(dirname, "driver.c")).read_text(), "cuda_utils")
+2026-02-01T20:38:07.257681115Z           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.257685208Z   File "/opt/conda/lib/python3.11/site-packages/triton/backends/nvidia/driver.py", line 57, in compile_module_from_src
+2026-02-01T20:38:07.257689548Z     so = _build(name, src_path, tmpdir, library_dirs(), include_dir, libraries)
+2026-02-01T20:38:07.257693724Z          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:07.257697748Z   File "/opt/conda/lib/python3.11/site-packages/triton/runtime/build.py", line 32, in _build
+2026-02-01T20:38:07.257702018Z     raise RuntimeError("Failed to find C compiler. Please specify via CC environment variable.")
+2026-02-01T20:38:07.257706241Z torch._dynamo.exc.BackendCompilerFailed: backend='inductor' raised:
+2026-02-01T20:38:07.257710364Z RuntimeError: Failed to find C compiler. Please specify via CC environment variable.
+2026-02-01T20:38:07.257718855Z Set TORCH_LOGS="+dynamo" and TORCHDYNAMO_VERBOSE=1 for more information
+2026-02-01T20:38:07.257730788Z You can suppress this exception and fall back to eager by setting:
+2026-02-01T20:38:07.257734815Z     import torch._dynamo
+2026-02-01T20:38:07.257739394Z     torch._dynamo.config.suppress_errors = True
+2026-02-01T20:38:12.263519592Z 🔍 Checking for updates from GitHub...
+2026-02-01T20:38:12.417317694Z ⚠️ Git pull failed, using baked-in code.
+2026-02-01T20:38:12.417368044Z 🚀 Starting PersonaPlex Server...
+2026-02-01T20:38:14.291058886Z 2026-02-01 20:38:14,290 - __main__ - INFO - retrieving voice prompts
+2026-02-01T20:38:14.363988926Z 2026-02-01 20:38:14,363 - __main__ - INFO - voice_prompt_dir = /root/.cache/huggingface/hub/models--nvidia--personaplex-7b-v1/snapshots/3343b641d663e4c851120b3575cbdfa4cc33e7fa/voices
+2026-02-01T20:38:14.364033672Z 2026-02-01 20:38:14,363 - __main__ - INFO - retrieving the static content
+2026-02-01T20:38:14.395411223Z 2026-02-01 20:38:14,395 - __main__ - INFO - static_path = /root/.cache/huggingface/hub/models--nvidia--personaplex-7b-v1/snapshots/3343b641d663e4c851120b3575cbdfa4cc33e7fa/dist
+2026-02-01T20:38:14.609603426Z 2026-02-01 20:38:14,609 - __main__ - INFO - loading mimi
+2026-02-01T20:38:16.137505898Z 2026-02-01 20:38:16,136 - __main__ - INFO - mimi loaded
+2026-02-01T20:38:16.226696696Z 2026-02-01 20:38:16,226 - __main__ - INFO - loading moshi
+2026-02-01T20:38:22.030767340Z 2026-02-01 20:38:22,030 - __main__ - INFO - moshi loaded
+2026-02-01T20:38:22.048922785Z 2026-02-01 20:38:22,048 - __main__ - INFO - warming up the model
+2026-02-01T20:38:23.887383401Z Traceback (most recent call last):
+2026-02-01T20:38:23.887475945Z   File "<frozen runpy>", line 198, in _run_module_as_main
+2026-02-01T20:38:23.887488931Z   File "<frozen runpy>", line 88, in _run_code
+2026-02-01T20:38:23.887493834Z   File "/app/personaplex-main/moshi/moshi/server.py", line 483, in <module>
+2026-02-01T20:38:23.887498578Z     main()
+2026-02-01T20:38:23.887505091Z   File "/app/personaplex-main/moshi/moshi/server.py", line 458, in main
+2026-02-01T20:38:23.887558170Z     state.warmup()
+2026-02-01T20:38:23.887572667Z   File "/app/personaplex-main/moshi/moshi/server.py", line 122, in warmup
+2026-02-01T20:38:23.887579930Z     codes = self.mimi.encode(chunk)
+2026-02-01T20:38:23.887588347Z             ^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.887595790Z   File "/app/personaplex-main/moshi/moshi/models/compression.py", line 378, in encode
+2026-02-01T20:38:23.887652267Z     emb = self._encode_to_unquantized_latent(x)
+2026-02-01T20:38:23.887658680Z           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.887663393Z   File "/app/personaplex-main/moshi/moshi/models/compression.py", line 364, in _encode_to_unquantized_latent
+2026-02-01T20:38:23.888013171Z     (emb,) = state.graphed_tr_enc(emb)
+2026-02-01T20:38:23.888037105Z              ^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.888042148Z   File "/app/personaplex-main/moshi/moshi/utils/compile.py", line 295, in __call__
+2026-02-01T20:38:23.888047210Z     return self.func(*args)
+2026-02-01T20:38:23.888052262Z            ^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.888056802Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+2026-02-01T20:38:23.888119397Z     return self._call_impl(*args, **kwargs)
+2026-02-01T20:38:23.888125234Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.888129784Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+2026-02-01T20:38:23.888331149Z     return forward_call(*args, **kwargs)
+2026-02-01T20:38:23.888336270Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.888340463Z   File "/app/personaplex-main/moshi/moshi/modules/transformer.py", line 767, in forward
+2026-02-01T20:38:23.888344909Z     z = self.transformer(x, *args, **kwargs)
+2026-02-01T20:38:23.888361300Z         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.888365780Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+2026-02-01T20:38:23.888662464Z     return self._call_impl(*args, **kwargs)
+2026-02-01T20:38:23.888667421Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.888671624Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+2026-02-01T20:38:23.888869643Z     return forward_call(*args, **kwargs)
+2026-02-01T20:38:23.888874586Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.888878923Z   File "/app/personaplex-main/moshi/moshi/modules/transformer.py", line 716, in forward
+2026-02-01T20:38:23.888883130Z     x = layer(x, *args, **kwargs)
+2026-02-01T20:38:23.888887410Z         ^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.888891605Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+2026-02-01T20:38:23.889192524Z     return self._call_impl(*args, **kwargs)
+2026-02-01T20:38:23.889197444Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.889201628Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+2026-02-01T20:38:23.889398197Z     return forward_call(*args, **kwargs)
+2026-02-01T20:38:23.889403437Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.889407650Z   File "/app/personaplex-main/moshi/moshi/modules/transformer.py", line 611, in forward
+2026-02-01T20:38:23.889411942Z     x = self._sa_block(x)
+2026-02-01T20:38:23.889416724Z         ^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.889420894Z   File "/app/personaplex-main/moshi/moshi/modules/transformer.py", line 604, in _sa_block
+2026-02-01T20:38:23.889604641Z     update = self.self_attn(x, x, x)
+2026-02-01T20:38:23.889609468Z              ^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.889613653Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+2026-02-01T20:38:23.889685621Z     return self._call_impl(*args, **kwargs)
+2026-02-01T20:38:23.889690221Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.889694361Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+2026-02-01T20:38:23.889882064Z     return forward_call(*args, **kwargs)
+2026-02-01T20:38:23.889886857Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.889891087Z   File "/app/personaplex-main/moshi/moshi/modules/transformer.py", line 423, in forward
+2026-02-01T20:38:23.890092256Z     q, k = self.rope(q, k, offset, time_before_heads=False)
+2026-02-01T20:38:23.890096988Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.890101183Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+2026-02-01T20:38:23.890317427Z     return self._call_impl(*args, **kwargs)
+2026-02-01T20:38:23.890322177Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.890326371Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+2026-02-01T20:38:23.890371938Z     return forward_call(*args, **kwargs)
+2026-02-01T20:38:23.890376827Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.890381038Z   File "/app/personaplex-main/moshi/moshi/modules/rope.py", line 111, in forward
+2026-02-01T20:38:23.890615640Z     return apply_rope(q, k, offset, self.max_period, time_before_heads)
+2026-02-01T20:38:23.890620247Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.890624555Z   File "/app/personaplex-main/moshi/moshi/utils/compile.py", line 73, in _wrapped
+2026-02-01T20:38:23.890628720Z     return fun_compiled(*args, **kwargs)
+2026-02-01T20:38:23.890632865Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.890637082Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/eval_frame.py", line 433, in _fn
+2026-02-01T20:38:23.890641407Z     return fn(*args, **kwargs)
+2026-02-01T20:38:23.890645710Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.890650137Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/convert_frame.py", line 1116, in __call__
+2026-02-01T20:38:23.890865848Z     return self._torchdynamo_orig_callable(
+2026-02-01T20:38:23.890870628Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.890874878Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/convert_frame.py", line 948, in __call__
+2026-02-01T20:38:23.890879091Z     result = self._inner_convert(
+2026-02-01T20:38:23.890883468Z              ^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.890887618Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/convert_frame.py", line 472, in __call__
+2026-02-01T20:38:23.890972255Z     return _compile(
+2026-02-01T20:38:23.890980183Z            ^^^^^^^^^
+2026-02-01T20:38:23.890987250Z   File "/opt/conda/lib/python3.11/site-packages/torch/_utils_internal.py", line 84, in wrapper_function
+2026-02-01T20:38:23.891075060Z     return StrobelightCompileTimeProfiler.profile_compile_time(
+2026-02-01T20:38:23.891094913Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.891099874Z   File "/opt/conda/lib/python3.11/site-packages/torch/_strobelight/compile_time_profiler.py", line 129, in profile_compile_time
+2026-02-01T20:38:23.891105004Z     return func(*args, **kwargs)
+2026-02-01T20:38:23.891129850Z            ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.891135207Z   File "/opt/conda/lib/python3.11/contextlib.py", line 81, in inner
+2026-02-01T20:38:23.891146464Z     return func(*args, **kwds)
+2026-02-01T20:38:23.891151339Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.891155557Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/convert_frame.py", line 817, in _compile
+2026-02-01T20:38:23.891259853Z     guarded_code = compile_inner(code, one_graph, hooks, transform)
+2026-02-01T20:38:23.891267559Z                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.891271906Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/utils.py", line 231, in time_wrapper
+2026-02-01T20:38:23.891322631Z     r = func(*args, **kwargs)
+2026-02-01T20:38:23.891327376Z         ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.891331631Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/convert_frame.py", line 636, in compile_inner
+2026-02-01T20:38:23.891437381Z     out_code = transform_code_object(code, transform)
+2026-02-01T20:38:23.891457772Z                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.891474790Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/bytecode_transformation.py", line 1185, in transform_code_object
+2026-02-01T20:38:23.891627531Z     transformations(instructions, code_options)
+2026-02-01T20:38:23.891632401Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/convert_frame.py", line 178, in _fn
+2026-02-01T20:38:23.891846708Z     return fn(*args, **kwargs)
+2026-02-01T20:38:23.891851545Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.891856005Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/convert_frame.py", line 582, in transform
+2026-02-01T20:38:23.891860272Z     tracer.run()
+2026-02-01T20:38:23.891864592Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/symbolic_convert.py", line 2451, in run
+2026-02-01T20:38:23.892181666Z     super().run()
+2026-02-01T20:38:23.892186456Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/symbolic_convert.py", line 893, in run
+2026-02-01T20:38:23.892190606Z     while self.step():
+2026-02-01T20:38:23.892194930Z           ^^^^^^^^^^^
+2026-02-01T20:38:23.892199278Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/symbolic_convert.py", line 805, in step
+2026-02-01T20:38:23.892312483Z     self.dispatch_table[inst.opcode](self, inst)
+2026-02-01T20:38:23.892317200Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/symbolic_convert.py", line 2642, in RETURN_VALUE
+2026-02-01T20:38:23.892613584Z     self._return(inst)
+2026-02-01T20:38:23.892618258Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/symbolic_convert.py", line 2627, in _return
+2026-02-01T20:38:23.892913569Z     self.output.compile_subgraph(
+2026-02-01T20:38:23.892918476Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/output_graph.py", line 1123, in compile_subgraph
+2026-02-01T20:38:23.893052166Z     self.compile_and_call_fx_graph(tx, pass2.graph_output_vars(), root)
+2026-02-01T20:38:23.893103812Z   File "/opt/conda/lib/python3.11/contextlib.py", line 81, in inner
+2026-02-01T20:38:23.893123241Z     return func(*args, **kwds)
+2026-02-01T20:38:23.893133158Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.893138921Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/output_graph.py", line 1318, in compile_and_call_fx_graph
+2026-02-01T20:38:23.893301871Z     compiled_fn = self.call_user_compiler(gm)
+2026-02-01T20:38:23.893310851Z                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.893317757Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/utils.py", line 231, in time_wrapper
+2026-02-01T20:38:23.893369114Z     r = func(*args, **kwargs)
+2026-02-01T20:38:23.893378486Z         ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.893385824Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/output_graph.py", line 1409, in call_user_compiler
+2026-02-01T20:38:23.893547760Z     raise BackendCompilerFailed(self.compiler_fn, e).with_traceback(
+2026-02-01T20:38:23.893556040Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/output_graph.py", line 1390, in call_user_compiler
+2026-02-01T20:38:23.893717009Z     compiled_fn = compiler_fn(gm, self.example_inputs())
+2026-02-01T20:38:23.893725379Z                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.893732337Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/repro/after_dynamo.py", line 129, in __call__
+2026-02-01T20:38:23.893787878Z     compiled_gm = compiler_fn(gm, example_inputs)
+2026-02-01T20:38:23.893795884Z                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.893802921Z   File "/opt/conda/lib/python3.11/site-packages/torch/__init__.py", line 1951, in __call__
+2026-02-01T20:38:23.894042203Z     return compile_fx(model_, inputs_, config_patches=self.config)
+2026-02-01T20:38:23.894050250Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.894057443Z   File "/opt/conda/lib/python3.11/contextlib.py", line 81, in inner
+2026-02-01T20:38:23.894083580Z     return func(*args, **kwds)
+2026-02-01T20:38:23.894092687Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.894110296Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/compile_fx.py", line 1505, in compile_fx
+2026-02-01T20:38:23.894309885Z     return aot_autograd(
+2026-02-01T20:38:23.894317814Z            ^^^^^^^^^^^^^
+2026-02-01T20:38:23.894325105Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/backends/common.py", line 69, in __call__
+2026-02-01T20:38:23.894357415Z     cg = aot_module_simplified(gm, example_inputs, **self.kwargs)
+2026-02-01T20:38:23.894364991Z          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.894372328Z   File "/opt/conda/lib/python3.11/site-packages/torch/_functorch/aot_autograd.py", line 954, in aot_module_simplified
+2026-02-01T20:38:23.894511124Z     compiled_fn, _ = create_aot_dispatcher_function(
+2026-02-01T20:38:23.894516944Z                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.894521460Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/utils.py", line 231, in time_wrapper
+2026-02-01T20:38:23.894559687Z     r = func(*args, **kwargs)
+2026-02-01T20:38:23.894564330Z         ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.894568550Z   File "/opt/conda/lib/python3.11/site-packages/torch/_functorch/aot_autograd.py", line 687, in create_aot_dispatcher_function
+2026-02-01T20:38:23.894683152Z     compiled_fn, fw_metadata = compiler_fn(
+2026-02-01T20:38:23.894690583Z                                ^^^^^^^^^^^^
+2026-02-01T20:38:23.894698336Z   File "/opt/conda/lib/python3.11/site-packages/torch/_functorch/_aot_autograd/jit_compile_runtime_wrappers.py", line 168, in aot_dispatch_base
+2026-02-01T20:38:23.894740931Z     compiled_fw = compiler(fw_module, updated_flat_args)
+2026-02-01T20:38:23.894748776Z                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.894756223Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/utils.py", line 231, in time_wrapper
+2026-02-01T20:38:23.894804525Z     r = func(*args, **kwargs)
+2026-02-01T20:38:23.894809841Z         ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.894814305Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/compile_fx.py", line 1410, in fw_compiler_base
+2026-02-01T20:38:23.894991417Z     return inner_compile(
+2026-02-01T20:38:23.894996610Z            ^^^^^^^^^^^^^^
+2026-02-01T20:38:23.895000991Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/repro/after_aot.py", line 84, in debug_wrapper
+2026-02-01T20:38:23.895014737Z     inner_compiled_fn = compiler_fn(gm, example_inputs)
+2026-02-01T20:38:23.895028327Z                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.895032651Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/debug.py", line 304, in inner
+2026-02-01T20:38:23.895105926Z     return fn(*args, **kwargs)
+2026-02-01T20:38:23.895110634Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.895114944Z   File "/opt/conda/lib/python3.11/contextlib.py", line 81, in inner
+2026-02-01T20:38:23.895144700Z     return func(*args, **kwds)
+2026-02-01T20:38:23.895149340Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.895153540Z   File "/opt/conda/lib/python3.11/contextlib.py", line 81, in inner
+2026-02-01T20:38:23.895200376Z     return func(*args, **kwds)
+2026-02-01T20:38:23.895218560Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.895223079Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/utils.py", line 231, in time_wrapper
+2026-02-01T20:38:23.895259026Z     r = func(*args, **kwargs)
+2026-02-01T20:38:23.895263745Z         ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.895267848Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/compile_fx.py", line 527, in compile_fx_inner
+2026-02-01T20:38:23.895356859Z     compiled_graph = fx_codegen_and_compile(
+2026-02-01T20:38:23.895361632Z                      ^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.895365835Z   File "/opt/conda/lib/python3.11/contextlib.py", line 81, in inner
+2026-02-01T20:38:23.895380575Z     return func(*args, **kwds)
+2026-02-01T20:38:23.895385135Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.895397948Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/compile_fx.py", line 831, in fx_codegen_and_compile
+2026-02-01T20:38:23.895527198Z     compiled_fn = graph.compile_to_fn()
+2026-02-01T20:38:23.895537928Z                   ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.895542087Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/graph.py", line 1749, in compile_to_fn
+2026-02-01T20:38:23.895757097Z     return self.compile_to_module().call
+2026-02-01T20:38:23.895761963Z            ^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.895766260Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/utils.py", line 231, in time_wrapper
+2026-02-01T20:38:23.895809937Z     r = func(*args, **kwargs)
+2026-02-01T20:38:23.895814555Z         ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.895818857Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/graph.py", line 1678, in compile_to_module
+2026-02-01T20:38:23.896029765Z     self.codegen_with_cpp_wrapper() if self.cpp_wrapper else self.codegen()
+2026-02-01T20:38:23.896034485Z                                                              ^^^^^^^^^^^^^^
+2026-02-01T20:38:23.896038671Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/graph.py", line 1638, in codegen
+2026-02-01T20:38:23.896241713Z     self.scheduler.codegen()
+2026-02-01T20:38:23.896246934Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/utils.py", line 231, in time_wrapper
+2026-02-01T20:38:23.896285832Z     r = func(*args, **kwargs)
+2026-02-01T20:38:23.896291054Z         ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.896295307Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/scheduler.py", line 2741, in codegen
+2026-02-01T20:38:23.896620498Z     self.get_backend(device).codegen_node(node)
+2026-02-01T20:38:23.896625495Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/codegen/cuda_combined_scheduling.py", line 69, in codegen_node
+2026-02-01T20:38:23.896663112Z     return self._triton_scheduling.codegen_node(node)
+2026-02-01T20:38:23.896668154Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.896672457Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/codegen/simd.py", line 1148, in codegen_node
+2026-02-01T20:38:23.896837639Z     return self.codegen_node_schedule(node_schedule, buf_accesses, numel, rnumel)
+2026-02-01T20:38:23.896852171Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.896856596Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/codegen/simd.py", line 1317, in codegen_node_schedule
+2026-02-01T20:38:23.897132105Z     src_code = kernel.codegen_kernel()
+2026-02-01T20:38:23.897136739Z                ^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.897141232Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/codegen/triton.py", line 2159, in codegen_kernel
+2026-02-01T20:38:23.897398056Z     **self.inductor_meta_common(),
+2026-02-01T20:38:23.897402816Z       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.897406986Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/codegen/triton.py", line 2047, in inductor_meta_common
+2026-02-01T20:38:23.897627269Z     "backend_hash": torch.utils._triton.triton_hash_with_backend(),
+2026-02-01T20:38:23.897632166Z                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.897641352Z   File "/opt/conda/lib/python3.11/site-packages/torch/utils/_triton.py", line 63, in triton_hash_with_backend
+2026-02-01T20:38:23.897645816Z     backend = triton_backend()
+2026-02-01T20:38:23.897652926Z               ^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.897660139Z   File "/opt/conda/lib/python3.11/site-packages/torch/utils/_triton.py", line 49, in triton_backend
+2026-02-01T20:38:23.897666706Z     target = driver.active.get_current_target()
+2026-02-01T20:38:23.897673754Z              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.897680746Z   File "/opt/conda/lib/python3.11/site-packages/triton/runtime/driver.py", line 23, in __getattr__
+2026-02-01T20:38:23.897691261Z     self._initialize_obj()
+2026-02-01T20:38:23.897698491Z   File "/opt/conda/lib/python3.11/site-packages/triton/runtime/driver.py", line 20, in _initialize_obj
+2026-02-01T20:38:23.897706928Z     self._obj = self._init_fn()
+2026-02-01T20:38:23.897714144Z                 ^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.897721374Z   File "/opt/conda/lib/python3.11/site-packages/triton/runtime/driver.py", line 9, in _create_driver
+2026-02-01T20:38:23.897768698Z     return actives[0]()
+2026-02-01T20:38:23.897789201Z            ^^^^^^^^^^^^
+2026-02-01T20:38:23.897794991Z   File "/opt/conda/lib/python3.11/site-packages/triton/backends/nvidia/driver.py", line 371, in __init__
+2026-02-01T20:38:23.898043944Z     self.utils = CudaUtils()  # TODO: make static
+2026-02-01T20:38:23.898051074Z                  ^^^^^^^^^^^
+2026-02-01T20:38:23.898055486Z   File "/opt/conda/lib/python3.11/site-packages/triton/backends/nvidia/driver.py", line 80, in __init__
+2026-02-01T20:38:23.898059929Z     mod = compile_module_from_src(Path(os.path.join(dirname, "driver.c")).read_text(), "cuda_utils")
+2026-02-01T20:38:23.898064089Z           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.898068133Z   File "/opt/conda/lib/python3.11/site-packages/triton/backends/nvidia/driver.py", line 57, in compile_module_from_src
+2026-02-01T20:38:23.898072566Z     so = _build(name, src_path, tmpdir, library_dirs(), include_dir, libraries)
+2026-02-01T20:38:23.898076733Z          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:23.898080952Z   File "/opt/conda/lib/python3.11/site-packages/triton/runtime/build.py", line 32, in _build
+2026-02-01T20:38:23.898085099Z     raise RuntimeError("Failed to find C compiler. Please specify via CC environment variable.")
+2026-02-01T20:38:23.898089232Z torch._dynamo.exc.BackendCompilerFailed: backend='inductor' raised:
+2026-02-01T20:38:23.898093313Z RuntimeError: Failed to find C compiler. Please specify via CC environment variable.
+2026-02-01T20:38:23.898101593Z Set TORCH_LOGS="+dynamo" and TORCHDYNAMO_VERBOSE=1 for more information
+2026-02-01T20:38:23.898114049Z You can suppress this exception and fall back to eager by setting:
+2026-02-01T20:38:23.898118109Z     import torch._dynamo
+2026-02-01T20:38:23.898122423Z     torch._dynamo.config.suppress_errors = True
+2026-02-01T20:38:29.423742727Z 🔍 Checking for updates from GitHub...
+2026-02-01T20:38:29.595568502Z ⚠️ Git pull failed, using baked-in code.
+2026-02-01T20:38:29.595607967Z 🚀 Starting PersonaPlex Server...
+2026-02-01T20:38:31.126028059Z 2026-02-01 20:38:31,125 - __main__ - INFO - retrieving voice prompts
+2026-02-01T20:38:31.183663502Z 2026-02-01 20:38:31,183 - __main__ - INFO - voice_prompt_dir = /root/.cache/huggingface/hub/models--nvidia--personaplex-7b-v1/snapshots/3343b641d663e4c851120b3575cbdfa4cc33e7fa/voices
+2026-02-01T20:38:31.183696796Z 2026-02-01 20:38:31,183 - __main__ - INFO - retrieving the static content
+2026-02-01T20:38:31.224326612Z 2026-02-01 20:38:31,224 - __main__ - INFO - static_path = /root/.cache/huggingface/hub/models--nvidia--personaplex-7b-v1/snapshots/3343b641d663e4c851120b3575cbdfa4cc33e7fa/dist
+2026-02-01T20:38:31.419710389Z 2026-02-01 20:38:31,419 - __main__ - INFO - loading mimi
+2026-02-01T20:38:32.505354260Z 2026-02-01 20:38:32,504 - __main__ - INFO - mimi loaded
+2026-02-01T20:38:32.575959760Z 2026-02-01 20:38:32,575 - __main__ - INFO - loading moshi
+2026-02-01T20:38:38.107973211Z 2026-02-01 20:38:38,107 - __main__ - INFO - moshi loaded
+2026-02-01T20:38:38.126176966Z 2026-02-01 20:38:38,125 - __main__ - INFO - warming up the model
+2026-02-01T20:38:39.959515373Z Traceback (most recent call last):
+2026-02-01T20:38:39.959566062Z   File "<frozen runpy>", line 198, in _run_module_as_main
+2026-02-01T20:38:39.959571985Z   File "<frozen runpy>", line 88, in _run_code
+2026-02-01T20:38:39.959576477Z   File "/app/personaplex-main/moshi/moshi/server.py", line 483, in <module>
+2026-02-01T20:38:39.959581396Z     main()
+2026-02-01T20:38:39.959586119Z   File "/app/personaplex-main/moshi/moshi/server.py", line 458, in main
+2026-02-01T20:38:39.959735764Z     state.warmup()
+2026-02-01T20:38:39.959741591Z   File "/app/personaplex-main/moshi/moshi/server.py", line 122, in warmup
+2026-02-01T20:38:39.959746226Z     codes = self.mimi.encode(chunk)
+2026-02-01T20:38:39.959751648Z             ^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.959755835Z   File "/app/personaplex-main/moshi/moshi/models/compression.py", line 378, in encode
+2026-02-01T20:38:39.959760365Z     emb = self._encode_to_unquantized_latent(x)
+2026-02-01T20:38:39.959776055Z           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.959781398Z   File "/app/personaplex-main/moshi/moshi/models/compression.py", line 364, in _encode_to_unquantized_latent
+2026-02-01T20:38:39.959965080Z     (emb,) = state.graphed_tr_enc(emb)
+2026-02-01T20:38:39.959970184Z              ^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.959974447Z   File "/app/personaplex-main/moshi/moshi/utils/compile.py", line 295, in __call__
+2026-02-01T20:38:39.959979043Z     return self.func(*args)
+2026-02-01T20:38:39.959984057Z            ^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.959988220Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+2026-02-01T20:38:39.960241878Z     return self._call_impl(*args, **kwargs)
+2026-02-01T20:38:39.960246465Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.960250653Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+2026-02-01T20:38:39.960350258Z     return forward_call(*args, **kwargs)
+2026-02-01T20:38:39.960354995Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.960359205Z   File "/app/personaplex-main/moshi/moshi/modules/transformer.py", line 767, in forward
+2026-02-01T20:38:39.960611093Z     z = self.transformer(x, *args, **kwargs)
+2026-02-01T20:38:39.960635589Z         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.960640670Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+2026-02-01T20:38:39.960820738Z     return self._call_impl(*args, **kwargs)
+2026-02-01T20:38:39.960841898Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.960846672Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+2026-02-01T20:38:39.961019334Z     return forward_call(*args, **kwargs)
+2026-02-01T20:38:39.961024768Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.961029154Z   File "/app/personaplex-main/moshi/moshi/modules/transformer.py", line 716, in forward
+2026-02-01T20:38:39.961034044Z     x = layer(x, *args, **kwargs)
+2026-02-01T20:38:39.961038497Z         ^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.961042761Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+2026-02-01T20:38:39.961290157Z     return self._call_impl(*args, **kwargs)
+2026-02-01T20:38:39.961295167Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.961299389Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+2026-02-01T20:38:39.961495225Z     return forward_call(*args, **kwargs)
+2026-02-01T20:38:39.961500085Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.961504758Z   File "/app/personaplex-main/moshi/moshi/modules/transformer.py", line 611, in forward
+2026-02-01T20:38:39.961509235Z     x = self._sa_block(x)
+2026-02-01T20:38:39.961514675Z         ^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.961519534Z   File "/app/personaplex-main/moshi/moshi/modules/transformer.py", line 604, in _sa_block
+2026-02-01T20:38:39.961727607Z     update = self.self_attn(x, x, x)
+2026-02-01T20:38:39.961747570Z              ^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.961752404Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+2026-02-01T20:38:39.961791609Z     return self._call_impl(*args, **kwargs)
+2026-02-01T20:38:39.961798879Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.961803386Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+2026-02-01T20:38:39.961984198Z     return forward_call(*args, **kwargs)
+2026-02-01T20:38:39.961988988Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.961993732Z   File "/app/personaplex-main/moshi/moshi/modules/transformer.py", line 423, in forward
+2026-02-01T20:38:39.962199670Z     q, k = self.rope(q, k, offset, time_before_heads=False)
+2026-02-01T20:38:39.962205041Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.962209294Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+2026-02-01T20:38:39.962267259Z     return self._call_impl(*args, **kwargs)
+2026-02-01T20:38:39.962272087Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.962276409Z   File "/opt/conda/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+2026-02-01T20:38:39.962465253Z     return forward_call(*args, **kwargs)
+2026-02-01T20:38:39.962470098Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.962474340Z   File "/app/personaplex-main/moshi/moshi/modules/rope.py", line 111, in forward
+2026-02-01T20:38:39.962680651Z     return apply_rope(q, k, offset, self.max_period, time_before_heads)
+2026-02-01T20:38:39.962690444Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.962694661Z   File "/app/personaplex-main/moshi/moshi/utils/compile.py", line 73, in _wrapped
+2026-02-01T20:38:39.962698878Z     return fun_compiled(*args, **kwargs)
+2026-02-01T20:38:39.962703194Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.962707751Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/eval_frame.py", line 433, in _fn
+2026-02-01T20:38:39.962712067Z     return fn(*args, **kwargs)
+2026-02-01T20:38:39.962716308Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.962720501Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/convert_frame.py", line 1116, in __call__
+2026-02-01T20:38:39.962832656Z     return self._torchdynamo_orig_callable(
+2026-02-01T20:38:39.962837958Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.962842150Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/convert_frame.py", line 948, in __call__
+2026-02-01T20:38:39.963057965Z     result = self._inner_convert(
+2026-02-01T20:38:39.963062709Z              ^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.963067179Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/convert_frame.py", line 472, in __call__
+2026-02-01T20:38:39.963071419Z     return _compile(
+2026-02-01T20:38:39.963076006Z            ^^^^^^^^^
+2026-02-01T20:38:39.963080442Z   File "/opt/conda/lib/python3.11/site-packages/torch/_utils_internal.py", line 84, in wrapper_function
+2026-02-01T20:38:39.963085139Z     return StrobelightCompileTimeProfiler.profile_compile_time(
+2026-02-01T20:38:39.963089756Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.963093862Z   File "/opt/conda/lib/python3.11/site-packages/torch/_strobelight/compile_time_profiler.py", line 129, in profile_compile_time
+2026-02-01T20:38:39.963145374Z     return func(*args, **kwargs)
+2026-02-01T20:38:39.963165561Z            ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.963170556Z   File "/opt/conda/lib/python3.11/contextlib.py", line 81, in inner
+2026-02-01T20:38:39.963180744Z     return func(*args, **kwds)
+2026-02-01T20:38:39.963186108Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.963190675Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/convert_frame.py", line 817, in _compile
+2026-02-01T20:38:39.963302383Z     guarded_code = compile_inner(code, one_graph, hooks, transform)
+2026-02-01T20:38:39.963323138Z                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.963328213Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/utils.py", line 231, in time_wrapper
+2026-02-01T20:38:39.963370964Z     r = func(*args, **kwargs)
+2026-02-01T20:38:39.963378510Z         ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.963383270Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/convert_frame.py", line 636, in compile_inner
+2026-02-01T20:38:39.963493007Z     out_code = transform_code_object(code, transform)
+2026-02-01T20:38:39.963504127Z                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.963508569Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/bytecode_transformation.py", line 1185, in transform_code_object
+2026-02-01T20:38:39.963775105Z     transformations(instructions, code_options)
+2026-02-01T20:38:39.963780061Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/convert_frame.py", line 178, in _fn
+2026-02-01T20:38:39.963784371Z     return fn(*args, **kwargs)
+2026-02-01T20:38:39.963788778Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.963792802Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/convert_frame.py", line 582, in transform
+2026-02-01T20:38:39.963797138Z     tracer.run()
+2026-02-01T20:38:39.963801721Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/symbolic_convert.py", line 2451, in run
+2026-02-01T20:38:39.964183288Z     super().run()
+2026-02-01T20:38:39.964188518Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/symbolic_convert.py", line 893, in run
+2026-02-01T20:38:39.964193053Z     while self.step():
+2026-02-01T20:38:39.964197300Z           ^^^^^^^^^^^
+2026-02-01T20:38:39.964201745Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/symbolic_convert.py", line 805, in step
+2026-02-01T20:38:39.964396348Z     self.dispatch_table[inst.opcode](self, inst)
+2026-02-01T20:38:39.964401171Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/symbolic_convert.py", line 2642, in RETURN_VALUE
+2026-02-01T20:38:39.964690707Z     self._return(inst)
+2026-02-01T20:38:39.964695702Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/symbolic_convert.py", line 2627, in _return
+2026-02-01T20:38:39.964968741Z     self.output.compile_subgraph(
+2026-02-01T20:38:39.964973534Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/output_graph.py", line 1123, in compile_subgraph
+2026-02-01T20:38:39.965009051Z     self.compile_and_call_fx_graph(tx, pass2.graph_output_vars(), root)
+2026-02-01T20:38:39.965013565Z   File "/opt/conda/lib/python3.11/contextlib.py", line 81, in inner
+2026-02-01T20:38:39.965081604Z     return func(*args, **kwds)
+2026-02-01T20:38:39.965114764Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.965120153Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/output_graph.py", line 1318, in compile_and_call_fx_graph
+2026-02-01T20:38:39.965239909Z     compiled_fn = self.call_user_compiler(gm)
+2026-02-01T20:38:39.965245652Z                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.965249799Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/utils.py", line 231, in time_wrapper
+2026-02-01T20:38:39.965292023Z     r = func(*args, **kwargs)
+2026-02-01T20:38:39.965296882Z         ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.965301183Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/output_graph.py", line 1409, in call_user_compiler
+2026-02-01T20:38:39.965476361Z     raise BackendCompilerFailed(self.compiler_fn, e).with_traceback(
+2026-02-01T20:38:39.965482162Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/output_graph.py", line 1390, in call_user_compiler
+2026-02-01T20:38:39.965630031Z     compiled_fn = compiler_fn(gm, self.example_inputs())
+2026-02-01T20:38:39.965635404Z                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.965639741Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/repro/after_dynamo.py", line 129, in __call__
+2026-02-01T20:38:39.965693781Z     compiled_gm = compiler_fn(gm, example_inputs)
+2026-02-01T20:38:39.965698747Z                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.965709471Z   File "/opt/conda/lib/python3.11/site-packages/torch/__init__.py", line 1951, in __call__
+2026-02-01T20:38:39.965964295Z     return compile_fx(model_, inputs_, config_patches=self.config)
+2026-02-01T20:38:39.965984529Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.965989555Z   File "/opt/conda/lib/python3.11/contextlib.py", line 81, in inner
+2026-02-01T20:38:39.965997445Z     return func(*args, **kwds)
+2026-02-01T20:38:39.966002795Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.966007542Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/compile_fx.py", line 1505, in compile_fx
+2026-02-01T20:38:39.966193271Z     return aot_autograd(
+2026-02-01T20:38:39.966200591Z            ^^^^^^^^^^^^^
+2026-02-01T20:38:39.966205184Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/backends/common.py", line 69, in __call__
+2026-02-01T20:38:39.966225426Z     cg = aot_module_simplified(gm, example_inputs, **self.kwargs)
+2026-02-01T20:38:39.966259610Z          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.966266180Z   File "/opt/conda/lib/python3.11/site-packages/torch/_functorch/aot_autograd.py", line 954, in aot_module_simplified
+2026-02-01T20:38:39.966396140Z     compiled_fn, _ = create_aot_dispatcher_function(
+2026-02-01T20:38:39.966403263Z                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.966407620Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/utils.py", line 231, in time_wrapper
+2026-02-01T20:38:39.966429260Z     r = func(*args, **kwargs)
+2026-02-01T20:38:39.966433817Z         ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.966462509Z   File "/opt/conda/lib/python3.11/site-packages/torch/_functorch/aot_autograd.py", line 687, in create_aot_dispatcher_function
+2026-02-01T20:38:39.966554864Z     compiled_fn, fw_metadata = compiler_fn(
+2026-02-01T20:38:39.966561046Z                                ^^^^^^^^^^^^
+2026-02-01T20:38:39.966565419Z   File "/opt/conda/lib/python3.11/site-packages/torch/_functorch/_aot_autograd/jit_compile_runtime_wrappers.py", line 168, in aot_dispatch_base
+2026-02-01T20:38:39.966615721Z     compiled_fw = compiler(fw_module, updated_flat_args)
+2026-02-01T20:38:39.966620991Z                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.966625176Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/utils.py", line 231, in time_wrapper
+2026-02-01T20:38:39.966679164Z     r = func(*args, **kwargs)
+2026-02-01T20:38:39.966684348Z         ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.966688525Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/compile_fx.py", line 1410, in fw_compiler_base
+2026-02-01T20:38:39.966859174Z     return inner_compile(
+2026-02-01T20:38:39.966863934Z            ^^^^^^^^^^^^^^
+2026-02-01T20:38:39.966868274Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/repro/after_aot.py", line 84, in debug_wrapper
+2026-02-01T20:38:39.966893803Z     inner_compiled_fn = compiler_fn(gm, example_inputs)
+2026-02-01T20:38:39.966898770Z                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.966902860Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/debug.py", line 304, in inner
+2026-02-01T20:38:39.966984879Z     return fn(*args, **kwargs)
+2026-02-01T20:38:39.966991443Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.966995896Z   File "/opt/conda/lib/python3.11/contextlib.py", line 81, in inner
+2026-02-01T20:38:39.967019679Z     return func(*args, **kwds)
+2026-02-01T20:38:39.967024063Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.967028202Z   File "/opt/conda/lib/python3.11/contextlib.py", line 81, in inner
+2026-02-01T20:38:39.967075536Z     return func(*args, **kwds)
+2026-02-01T20:38:39.967082043Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.967086379Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/utils.py", line 231, in time_wrapper
+2026-02-01T20:38:39.967134663Z     r = func(*args, **kwargs)
+2026-02-01T20:38:39.967140655Z         ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.967145508Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/compile_fx.py", line 527, in compile_fx_inner
+2026-02-01T20:38:39.967225521Z     compiled_graph = fx_codegen_and_compile(
+2026-02-01T20:38:39.967233008Z                      ^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.967237272Z   File "/opt/conda/lib/python3.11/contextlib.py", line 81, in inner
+2026-02-01T20:38:39.967256022Z     return func(*args, **kwds)
+2026-02-01T20:38:39.967260608Z            ^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.967264938Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/compile_fx.py", line 831, in fx_codegen_and_compile
+2026-02-01T20:38:39.967388734Z     compiled_fn = graph.compile_to_fn()
+2026-02-01T20:38:39.967395914Z                   ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.967400281Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/graph.py", line 1749, in compile_to_fn
+2026-02-01T20:38:39.967620810Z     return self.compile_to_module().call
+2026-02-01T20:38:39.967632348Z            ^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.967636895Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/utils.py", line 231, in time_wrapper
+2026-02-01T20:38:39.967813731Z     r = func(*args, **kwargs)
+2026-02-01T20:38:39.967820444Z         ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.967824674Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/graph.py", line 1678, in compile_to_module
+2026-02-01T20:38:39.967894844Z     self.codegen_with_cpp_wrapper() if self.cpp_wrapper else self.codegen()
+2026-02-01T20:38:39.967899718Z                                                              ^^^^^^^^^^^^^^
+2026-02-01T20:38:39.967903914Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/graph.py", line 1638, in codegen
+2026-02-01T20:38:39.968180712Z     self.scheduler.codegen()
+2026-02-01T20:38:39.968185472Z   File "/opt/conda/lib/python3.11/site-packages/torch/_dynamo/utils.py", line 231, in time_wrapper
+2026-02-01T20:38:39.968189736Z     r = func(*args, **kwargs)
+2026-02-01T20:38:39.968193986Z         ^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.968198686Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/scheduler.py", line 2741, in codegen
+2026-02-01T20:38:39.968555410Z     self.get_backend(device).codegen_node(node)
+2026-02-01T20:38:39.968562170Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/codegen/cuda_combined_scheduling.py", line 69, in codegen_node
+2026-02-01T20:38:39.968566553Z     return self._triton_scheduling.codegen_node(node)
+2026-02-01T20:38:39.968571124Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.968576110Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/codegen/simd.py", line 1148, in codegen_node
+2026-02-01T20:38:39.968757009Z     return self.codegen_node_schedule(node_schedule, buf_accesses, numel, rnumel)
+2026-02-01T20:38:39.968763151Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.968767311Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/codegen/simd.py", line 1317, in codegen_node_schedule
+2026-02-01T20:38:39.968970892Z     src_code = kernel.codegen_kernel()
+2026-02-01T20:38:39.968975632Z                ^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.968979812Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/codegen/triton.py", line 2159, in codegen_kernel
+2026-02-01T20:38:39.969179200Z     **self.inductor_meta_common(),
+2026-02-01T20:38:39.969184040Z       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.969188373Z   File "/opt/conda/lib/python3.11/site-packages/torch/_inductor/codegen/triton.py", line 2047, in inductor_meta_common
+2026-02-01T20:38:39.969410048Z     "backend_hash": torch.utils._triton.triton_hash_with_backend(),
+2026-02-01T20:38:39.969415052Z                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.969419927Z   File "/opt/conda/lib/python3.11/site-packages/torch/utils/_triton.py", line 63, in triton_hash_with_backend
+2026-02-01T20:38:39.969424239Z     backend = triton_backend()
+2026-02-01T20:38:39.969428732Z               ^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.969433169Z   File "/opt/conda/lib/python3.11/site-packages/torch/utils/_triton.py", line 49, in triton_backend
+2026-02-01T20:38:39.969437559Z     target = driver.active.get_current_target()
+2026-02-01T20:38:39.969447544Z              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.969451944Z   File "/opt/conda/lib/python3.11/site-packages/triton/runtime/driver.py", line 23, in __getattr__
+2026-02-01T20:38:39.969458147Z     self._initialize_obj()
+2026-02-01T20:38:39.969462559Z   File "/opt/conda/lib/python3.11/site-packages/triton/runtime/driver.py", line 20, in _initialize_obj
+2026-02-01T20:38:39.969486444Z     self._obj = self._init_fn()
+2026-02-01T20:38:39.969491518Z                 ^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.969496131Z   File "/opt/conda/lib/python3.11/site-packages/triton/runtime/driver.py", line 9, in _create_driver
+2026-02-01T20:38:39.969509148Z     return actives[0]()
+2026-02-01T20:38:39.969517278Z            ^^^^^^^^^^^^
+2026-02-01T20:38:39.969522078Z   File "/opt/conda/lib/python3.11/site-packages/triton/backends/nvidia/driver.py", line 371, in __init__
+2026-02-01T20:38:39.969714700Z     self.utils = CudaUtils()  # TODO: make static
+2026-02-01T20:38:39.969721510Z                  ^^^^^^^^^^^
+2026-02-01T20:38:39.969726186Z   File "/opt/conda/lib/python3.11/site-packages/triton/backends/nvidia/driver.py", line 80, in __init__
+2026-02-01T20:38:39.969730957Z     mod = compile_module_from_src(Path(os.path.join(dirname, "driver.c")).read_text(), "cuda_utils")
+2026-02-01T20:38:39.969735246Z           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.969739403Z   File "/opt/conda/lib/python3.11/site-packages/triton/backends/nvidia/driver.py", line 57, in compile_module_from_src
+2026-02-01T20:38:39.969743896Z     so = _build(name, src_path, tmpdir, library_dirs(), include_dir, libraries)
+2026-02-01T20:38:39.969748157Z          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-02-01T20:38:39.969753083Z   File "/opt/conda/lib/python3.11/site-packages/triton/runtime/build.py", line 32, in _build
+2026-02-01T20:38:39.969762287Z     raise RuntimeError("Failed to find C compiler. Please specify via CC environment variable.")
+2026-02-01T20:38:39.969766753Z torch._dynamo.exc.BackendCompilerFailed: backend='inductor' raised:
+2026-02-01T20:38:39.969771013Z RuntimeError: Failed to find C compiler. Please specify via CC environment variable.
+2026-02-01T20:38:39.969779482Z Set TORCH_LOGS="+dynamo" and TORCHDYNAMO_VERBOSE=1 for more information
+2026-02-01T20:38:39.969792180Z You can suppress this exception and fall back to eager by setting:
+2026-02-01T20:38:39.969796267Z     import torch._dynamo
+2026-02-01T20:38:39.969800607Z     torch._dynamo.config.suppress_errors = True

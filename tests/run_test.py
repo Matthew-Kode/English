@@ -21,7 +21,7 @@ def main():
 
     # Initialize safety wrapper
     # Our Gold Image with baked-in model weights (Instant Boot!)
-    IMAGE = "matthewkode/personaplex:v1" 
+    IMAGE = "matthewkode/personaplex:v2" 
     
     try:
         with EphemeralPod(image_name=IMAGE) as pod:
@@ -39,13 +39,23 @@ def main():
             
             print(Fore.YELLOW + "Press Ctrl+C to End Chat and KILL POD." + Style.RESET_ALL)
             time.sleep(2)
-            
-            # Launch Client
-            if websocket_url:
-                start_client(websocket_url)
-            else:
-                print(Fore.RED + "Could not determine socket URL." + Style.RESET_ALL)
-                pod.debug_info()
+            try:
+                # Main Test Loop
+                # if MAX_SESSION_MINUTES > 0:
+                #     print(f"⏱️  Session Limited to {MAX_SESSION_MINUTES} minutes.")
+                #     # In a real app we'd use a timer thread, here we just trust the user plays along
+                #     # or we wrap chat_client in a timeout.
+                #     pass
+                
+                # Launch Client
+                if websocket_url:
+                    start_client(websocket_url) # Assuming start_client is the correct function name
+                else:
+                    print(Fore.RED + "Could not determine socket URL." + Style.RESET_ALL)
+                    pod.debug_info()
+                
+            except KeyboardInterrupt:
+                print("\n" + Fore.RED + "Interrupted by User." + Style.RESET_ALL) # Corrected original line
             
     except KeyboardInterrupt:
         print("\n" + Fore.RED + "Interrupted by User." + Style.RESET_ALL)

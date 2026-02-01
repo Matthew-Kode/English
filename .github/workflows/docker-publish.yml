@@ -55,7 +55,7 @@ jobs:
           context: .
           file: personaplex-main/Dockerfile
           push: true
-          tags: ${{ env.IMAGE_NAME }}:v2
+          tags: ${{ env.IMAGE_NAME }}:v3
           build-args: |
             HF_TOKEN=${{ secrets.HF_TOKEN }}
           cache-from: type=gha

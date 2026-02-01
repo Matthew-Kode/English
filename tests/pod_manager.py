@@ -21,11 +21,16 @@ class EphemeralPod:
     Context Manager to handle RunPod lifecycle safely.
     ensures kill_pod() is called even if code errors out.
     """
-    def __init__(self, image_name="nvidia/personaplex", gpu_type=None, environment_variables=None):
+    def __init__(self, image_name="matthewkode/personaplex:v3", gpu_type=None, environment_variables=None):
         self.image_name = image_name
         self.gpu_type = gpu_type or os.getenv("RUNPOD_GPU_TYPE", "NVIDIA RTX A5000")
         self.pod_id = None
         self.env_vars = environment_variables or {}
+        # Re-enabling torch.compile since v3 image has build-essential
+        self.env_vars["NO_TORCH_COMPILE"] = "0" 
+        self.env_vars["MOSHI_USE_CUDA_GRAPH"] = "1"
+        if os.getenv("HF_TOKEN"):
+            self.env_vars["HF_TOKEN"] = os.getenv("HF_TOKEN")
         
         # Docker Hub credentials for private registry
         self.docker_username = os.getenv("DOCKER_USERNAME")
@@ -85,17 +90,26 @@ class EphemeralPod:
             return None
             
         print("🔍 [Manager] Polling for Public IP/Port (this ensures container is ready)...")
-        for i in range(20): # Try for 100 seconds (20 * 5s)
+        # Poll for IP/Port - Infinite loop until ready (no timeout for large pulls)
+        attempt = 0
+        while True:
+            attempt += 1
             try:
-                pod_info = runpod.get_pod(self.pod_id)
+                pod_status = runpod.get_pod(self.pod_id)
+                
+                if not pod_status:
+                    print(f"   [Polling #{attempt}] Warning: API returned None. Retrying...")
+                    time.sleep(5)
+                    continue
+
                 # Check status
                 status = None
-                if 'runtime' in pod_info and 'status' in pod_info['runtime']:
-                    status = pod_info['runtime']['status']
+                if 'runtime' in pod_status and pod_status['runtime'] and 'status' in pod_status['runtime']:
+                    status = pod_status['runtime']['status']
                 
                 # Check ports
-                if 'runtime' in pod_info and 'ports' in pod_info['runtime']:
-                    ports = pod_info['runtime']['ports']
+                if 'runtime' in pod_status and pod_status['runtime'] and 'ports' in pod_status['runtime']:
+                    ports = pod_status['runtime']['ports']
                     if ports:
                         for p in ports:
                             # We requested 8998/http, so we look for privatePort 8998
@@ -104,11 +118,11 @@ class EphemeralPod:
                                 pub_port = p['publicPort']
                                 return f"ws://{pub_ip}:{pub_port}/api/chat"
                 
-                print(f"   [Polling {i+1}/20] Status: {status} | Waiting for Port Mappings...")
-                time.sleep(5)
+                print(f"   [Polling #{attempt}] Status: {status} | Waiting for Port Mappings...")
+                time.sleep(10) # 10s wait between polls
             except Exception as e:
                 print(f"   [Polling] Error: {e}")
-                time.sleep(5)
+                time.sleep(10)
         
         print("❌ [Manager] Timed out waiting for Public IP.")
         # Fallback to proxy if direct fails (though unlikely to work if direct didn't appeared)

@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y \
     libopus-dev \
     git \
     git-lfs \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 # 2. Set Up Working Directory

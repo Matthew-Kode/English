@@ -113,17 +113,29 @@ class AudioClient:
         full_uri = f"{self.base_uri}?{query_string}"
 
         print(f"🔌 Connecting to {full_uri}...")
+        
+        # Retry loop for initial connection (startup delay due to GCC install)
         try:
-            async with websockets.connect(full_uri) as ws:
-                print("✅ Connected!")
-                
-                # Run send/recv in parallel
-                await asyncio.gather(
-                    self.send_audio(ws),
-                    self.receive_audio(ws)
-                )
-        except Exception as e:
-            print(f"❌ Client Error: {e}")
+            while self.running:
+                try:
+                    async with websockets.connect(full_uri) as ws:
+                        print("✅ Connected!")
+                        
+                        # Run send/recv in parallel
+                        await asyncio.gather(
+                            self.send_audio(ws),
+                            self.receive_audio(ws)
+                        )
+                        # If we exit gather usually means connection closed or self.running is False
+                        if not self.running:
+                            break
+                            
+                except (websockets.exceptions.ConnectionClosed, ConnectionRefusedError, OSError) as e:
+                    print(f"⏳ Service not ready yet... Retrying in 5s. ({e})")
+                    time.sleep(5)
+                except Exception as e:
+                    print(f"❌ Client Error: {e}")
+                    break
         finally:
             self.running = False
 
