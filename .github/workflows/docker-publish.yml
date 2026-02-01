@@ -37,6 +37,14 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      # Verify HF Token (Debug Step)
+      - name: Verify HF Token
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          pip install huggingface_hub
+          python -c "import os; t = os.environ.get('HF_TOKEN', ''); print(f'Token Length: {len(t)}'); from huggingface_hub import HfApi; print('User:', HfApi(token=t).whoami()['name'])"
+
       # Build and Push
       # Note: We pass the HF_TOKEN from GitHub Secrets to the Docker Build Args
       - name: Build and push Docker image
