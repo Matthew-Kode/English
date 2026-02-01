@@ -24,15 +24,23 @@ RUN pip install --no-cache-dir huggingface_hub
 ARG HF_TOKEN
 
 # CRITICAL: Set HF_HOME explicitly so cache is found at runtime
-ENV HF_HOME=/app/.cache/huggingface
-ENV TRANSFORMERS_CACHE=/app/.cache/huggingface
+ENV HF_HOME=/root/.cache/huggingface
+ENV TRANSFORMERS_CACHE=/root/.cache/huggingface
 
-# Download the 7B Model to the explicit cache location
+# Download each file the server needs using hf_hub_download (same as server.py)
+# This ensures the cache structure matches what the server expects
 RUN if [ -n "$HF_TOKEN" ]; then \
-    mkdir -p /app/.cache/huggingface && \
     huggingface-cli login --token $HF_TOKEN && \
-    python3 -c "from huggingface_hub import snapshot_download; snapshot_download('nvidia/personaplex-7b-v1', cache_dir='/app/.cache/huggingface/hub')" && \
-    echo '✅ Model downloaded and cached at /app/.cache/huggingface/hub'; \
+    python3 -c "from huggingface_hub import hf_hub_download; \
+    repo = 'nvidia/personaplex-7b-v1'; \
+    print('Downloading model.safetensors...'); hf_hub_download(repo, 'model.safetensors'); \
+    print('Downloading tokenizer...'); hf_hub_download(repo, 'tokenizer-e351c8d8-checkpoint125.safetensors'); \
+    print('Downloading text tokenizer...'); hf_hub_download(repo, 'tokenizer_spm_32k_3.model'); \
+    print('Downloading config...'); hf_hub_download(repo, 'config.json'); \
+    print('Downloading voices...'); hf_hub_download(repo, 'voices.tgz'); \
+    print('Downloading dist...'); hf_hub_download(repo, 'dist.tgz'); \
+    print('✅ All model files downloaded!')" && \
+    echo '✅ Model cached at /root/.cache/huggingface/hub'; \
     else \
     echo "⚠️ WARNING: HF_TOKEN not provided. Model weights will NOT be baked in."; \
     fi
