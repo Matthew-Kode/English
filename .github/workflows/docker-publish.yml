@@ -28,6 +28,13 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      # Verify Docker Auth (Fail fast if credentials are invalid)
+      - name: Verify Docker Auth
+        run: |
+          echo "🔐 Verifying Docker Hub credentials..."
+          docker pull hello-world
+          echo "✅ Docker Hub auth is working!"
+
       # Set up Docker Buildx (Essential for caching and multi-platform)
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
