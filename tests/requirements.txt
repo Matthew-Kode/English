@@ -1,0 +1,6 @@
+runpod
+websockets
+sounddevice
+numpy
+python-dotenv
+colorama
