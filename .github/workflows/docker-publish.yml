@@ -3,11 +3,6 @@ name: Build and Push PersonaPlex
 on:
   push:
     branches: [ "main" ]
-    # Only build if Dockerfile or requirements change (saves time)
-    paths:
-      - 'personaplex-main/Dockerfile'
-      - 'personaplex-main/entrypoint.sh'
-      - '.github/workflows/**'
 
 env:
   # Use docker.io for Docker Hub if empty
