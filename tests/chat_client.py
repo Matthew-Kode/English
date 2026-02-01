@@ -105,7 +105,7 @@ class AudioClient:
     async def run(self):
         # Query Params for Persona
         params = {
-            "text_prompt": "You are Tom, a strict US Immigration Officer. You are suspicious of the traveler. Interrupt them if they stutter.",
+            "text_prompt": "You are Tom, a strict US Immigration Officer. You are suspicious of the traveler. Initiate the conversation first. Interrupt them if they stutter.",
             "voice_prompt": "voice_1.pt", 
             "seed": "42"
         }

@@ -20,8 +20,8 @@ def main():
         return
 
     # Initialize safety wrapper
-    # Using 'nvidia/personaplex' as requested
-    IMAGE = "nvidia/personaplex" 
+    # Our Gold Image with baked-in model weights (Instant Boot!)
+    IMAGE = "matthewkode/personaplex:v1" 
     
     try:
         with EphemeralPod(image_name=IMAGE) as pod:
