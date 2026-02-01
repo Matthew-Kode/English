@@ -21,7 +21,7 @@ def main():
 
     # Initialize safety wrapper
     # Our Gold Image with baked-in model weights (Instant Boot!)
-    IMAGE = "matthewkode/personaplex:v1" 
+    IMAGE = "matthewkode/personaplex:v2" 
     
     try:
         with EphemeralPod(image_name=IMAGE) as pod:

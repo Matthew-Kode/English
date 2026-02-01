@@ -26,19 +26,31 @@ class EphemeralPod:
         self.gpu_type = gpu_type or os.getenv("RUNPOD_GPU_TYPE", "NVIDIA RTX A5000")
         self.pod_id = None
         self.env_vars = environment_variables or {}
+        
+        # Docker Hub credentials for private registry
+        self.docker_username = os.getenv("DOCKER_USERNAME")
+        self.docker_password = os.getenv("DOCKER_PASSWORD")
 
     def __enter__(self):
         print(f"🚀 [Manager] Requesting {self.gpu_type} Pod...")
         try:
-            # Note: In real usage, might need to filter for specific cloud type or availability
-            pod = runpod.create_pod(
-                name="Visa-Denied-Tester",
-                image_name=self.image_name,
-                gpu_type_id=self.gpu_type,
-                cloud_type="SECURE", 
-                ports="8998/http", # Correct Protocol port # Correct Protocol port
-                env=self.env_vars
-            )
+            # Build pod creation arguments
+            pod_args = {
+                "name": "Visa-Denied-Tester",
+                "image_name": self.image_name,
+                "gpu_type_id": self.gpu_type,
+                "cloud_type": "SECURE",
+                "ports": "8998/http",
+                "env": self.env_vars
+            }
+            
+            # Use template_id if available (for private registry with pre-configured auth)
+            template_id = os.getenv("RUNPOD_PRIVATE_TEMPLATE_ID")
+            if template_id:
+                pod_args["template_id"] = template_id
+                print(f"🔐 [Manager] Using template {template_id} for private registry.")
+            
+            pod = runpod.create_pod(**pod_args)
             self.pod_id = pod['id']
             print(f"✅ [Manager] Pod Created: {self.pod_id}")
             print("⏳ [Manager] Waiting for Boot (approx 20-30s)...")
