@@ -9,28 +9,15 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# 2. Set Up Working Directory
-WORKDIR /app
-
-# 3. Copy Code (We copy everything so we can install)
-COPY . /app
-
-# 4. Install Python Dependencies
-# (Assumes we are at the root of 'English' repo where 'personaplex-main' is a subfolder)
-RUN pip install --no-cache-dir -e personaplex-main/moshi
-RUN pip install --no-cache-dir huggingface_hub
-
-# 5. Model Weights (BAKED IN)
-# We use a Build ARG so you don't hardcode the token in the file
-ARG HF_TOKEN
-
-# CRITICAL: Set HF_HOME explicitly so cache is found at runtime
+# 3. Set Environment Variables for Cache
 ENV HF_HOME=/root/.cache/huggingface
 ENV TRANSFORMERS_CACHE=/root/.cache/huggingface
 
-# Download each file the server needs using hf_hub_download (same as server.py)
-# This ensures the cache structure matches what the server expects
-RUN if [ -n "$HF_TOKEN" ]; then \
+# 4. DOWNLOAD MODEL WEIGHTS (The "Heavy" Layer)
+# We do this BEFORE 'COPY . /app'.
+ARG HF_TOKEN
+RUN pip install huggingface_hub && \
+    if [ -n "$HF_TOKEN" ]; then \
     huggingface-cli login --token $HF_TOKEN && \
     python3 -c "from huggingface_hub import hf_hub_download; \
     repo = 'nvidia/personaplex-7b-v1'; \
@@ -50,6 +37,14 @@ RUN if [ -n "$HF_TOKEN" ]; then \
     else \
     echo "⚠️ WARNING: HF_TOKEN not provided. Model weights will NOT be baked in."; \
     fi
+
+# 5. NOW Copy Your Code (The "Light" Layer)
+WORKDIR /app
+COPY . /app
+
+# 6. Install Local Python Dependencies
+# We do this after COPY because it needs the 'personaplex-main' folder to exist.
+RUN pip install --no-cache-dir -e personaplex-main/moshi
 
 # 6. Copy Entrypoint
 COPY personaplex-main/entrypoint.sh /app/entrypoint.sh
