@@ -21,7 +21,7 @@ class EphemeralPod:
     Context Manager to handle RunPod lifecycle safely.
     ensures kill_pod() is called even if code errors out.
     """
-    def __init__(self, image_name="matthewkode/personaplex:v3", gpu_type=None, environment_variables=None):
+    def __init__(self, image_name="matthewkode/personaplex:v4", gpu_type=None, environment_variables=None):
         self.image_name = image_name
         self.gpu_type = gpu_type or os.getenv("RUNPOD_GPU_TYPE", "NVIDIA RTX A5000")
         self.pod_id = None
@@ -103,23 +103,31 @@ class EphemeralPod:
                     continue
 
                 # Check status
-                status = None
-                if 'runtime' in pod_status and pod_status['runtime'] and 'status' in pod_status['runtime']:
-                    status = pod_status['runtime']['status']
+                runtime = pod_status.get('runtime', {})
+                status = runtime.get('status')
                 
                 # Check ports
-                if 'runtime' in pod_status and pod_status['runtime'] and 'ports' in pod_status['runtime']:
-                    ports = pod_status['runtime']['ports']
-                    if ports:
-                        for p in ports:
-                            # We requested 8998/http, so we look for privatePort 8998
-                            if p['privatePort'] == 8998 and p['isIpPublic']:
-                                pub_ip = p['publicIp']
-                                pub_port = p['publicPort']
+                ports = runtime.get('ports', [])
+                if ports:
+                    for p in ports:
+                        if p['privatePort'] == 8998:
+                            # Prefer 'address' if provided by newer SDK, otherwise use publicIp
+                            # Note: On some nodes, isIpPublic is False but publicPort is still mapped to the host
+                            
+                            pub_ip = p.get('publicIp') or pod_status.get('address')
+                            
+                            # Fallback if address is missing: some SDKs put it in runtime['address']
+                            if not pub_ip:
+                                pub_ip = runtime.get('address')
+
+                            pub_port = p.get('publicPort')
+                            
+                            if pub_ip and pub_port:
+                                print(f"✅ [Manager] Found Endpoint: {pub_ip}:{pub_port}")
                                 return f"ws://{pub_ip}:{pub_port}/api/chat"
                 
                 print(f"   [Polling #{attempt}] Status: {status} | Waiting for Port Mappings...")
-                time.sleep(10) # 10s wait between polls
+                time.sleep(5) # 10s wait between polls
             except Exception as e:
                 print(f"   [Polling] Error: {e}")
                 time.sleep(10)

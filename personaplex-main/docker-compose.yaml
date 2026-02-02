@@ -16,5 +16,4 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [ gpu ]
-    volumes:
-      - ./.cache:/root/.cache
+

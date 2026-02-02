@@ -38,9 +38,14 @@ RUN if [ -n "$HF_TOKEN" ]; then \
     print('Downloading tokenizer...'); hf_hub_download(repo, 'tokenizer-e351c8d8-checkpoint125.safetensors'); \
     print('Downloading text tokenizer...'); hf_hub_download(repo, 'tokenizer_spm_32k_3.model'); \
     print('Downloading config...'); hf_hub_download(repo, 'config.json'); \
-    print('Downloading voices...'); hf_hub_download(repo, 'voices.tgz'); \
-    print('Downloading dist...'); hf_hub_download(repo, 'dist.tgz'); \
-    print('✅ All model files downloaded!')" && \
+    print('Downloading voices...'); voices_path = hf_hub_download(repo, 'voices.tgz'); \
+    print('Extracting voices...'); \
+    import tarfile, os; \
+    with tarfile.open(voices_path, 'r:gz') as tar: tar.extractall(path=os.path.dirname(voices_path)); \
+    print('Downloading dist...'); dist_path = hf_hub_download(repo, 'dist.tgz'); \
+    print('Extracting dist...'); \
+    with tarfile.open(dist_path, 'r:gz') as tar: tar.extractall(path=os.path.dirname(dist_path)); \
+    print('✅ All model files downloaded and extracted!')" && \
     echo '✅ Model cached at /root/.cache/huggingface/hub'; \
     else \
     echo "⚠️ WARNING: HF_TOKEN not provided. Model weights will NOT be baked in."; \

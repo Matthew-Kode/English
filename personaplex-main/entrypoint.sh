@@ -1,16 +1,9 @@
 #!/bin/bash
 set -e
 
-# 1. Code Sync (The "Update" Feature)
-# Pull latest code from the PUBLIC repo (no auth needed)
-if [ -d ".git" ]; then
-    echo "🔍 Checking for updates from GitHub..."
-    # Force non-interactive mode and use public HTTPS URL
-    git config --global credential.helper ""
-    git pull --no-rebase https://github.com/Matthew-Kode/English.git main 2>/dev/null || echo "⚠️ Git pull failed, using baked-in code."
-else
-    echo "ℹ️ Not a git repo (Snapshot mode). Skipping git pull."
-fi
+# 1. Code Sync
+# We rely on 'Baked Images' now. Code is updated during GitHub build.
+echo "ℹ️ Using baked-in code (Commit: $(git rev-parse --short HEAD 2>/dev/null || echo 'unknown')). Skipping runtime pull for reliability."
 
 # 2. Start Server
 echo "🚀 Starting PersonaPlex Server..."
