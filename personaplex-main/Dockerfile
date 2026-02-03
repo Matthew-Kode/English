@@ -17,19 +17,16 @@ ENV TRANSFORMERS_CACHE=/root/.cache/huggingface
 # We do this BEFORE 'COPY . /app'.
 ARG HF_TOKEN
 RUN pip install --no-cache-dir huggingface_hub && \
-    HF_TOKEN=$HF_TOKEN python3 -c "from huggingface_hub import hf_hub_download; import tarfile, os, sys; \
-    repo = 'nvidia/personaplex-7b-v1'; token = os.environ.get('HF_TOKEN'); \
-    try: \
-        print(f'🚀 Starting download from {repo} (Token provided: {bool(token)})'); \
-        files = ['model.safetensors', 'tokenizer-e351c8d8-checkpoint125.safetensors', 'tokenizer_spm_32k_3.model', 'config.json']; \
-        for f in files: print(f'  Downloading {f}...'); hf_hub_download(repo, f, token=token); \
-        print('  Downloading voices.tgz...'); v_path = hf_hub_download(repo, 'voices.tgz', token=token); \
-        with tarfile.open(v_path, 'r:gz') as tar: tar.extractall(path=os.path.dirname(v_path)); \
-        print('  Downloading dist.tgz...'); d_path = hf_hub_download(repo, 'dist.tgz', token=token); \
-        with tarfile.open(d_path, 'r:gz') as tar: tar.extractall(path=os.path.dirname(d_path)); \
-        print('✅ All model files downloaded and extracted!'); \
-    except Exception as e: \
-        print(f'❌ DOWNLOAD FAILED: {e}'); sys.exit(1)" && \
+    HF_TOKEN=$HF_TOKEN python3 -c "import os, tarfile; from huggingface_hub import hf_hub_download; \
+    repo='nvidia/personaplex-7b-v1'; t=os.environ.get('HF_TOKEN'); \
+    print(f'🚀 Downloading from {repo}...'); \
+    hf_hub_download(repo, 'model.safetensors', token=t); \
+    hf_hub_download(repo, 'tokenizer-e351c8d8-checkpoint125.safetensors', token=t); \
+    hf_hub_download(repo, 'tokenizer_spm_32k_3.model', token=t); \
+    hf_hub_download(repo, 'config.json', token=t); \
+    v=hf_hub_download(repo, 'voices.tgz', token=t); tarfile.open(v, 'r:gz').extractall(path=os.path.dirname(v)); \
+    d=hf_hub_download(repo, 'dist.tgz', token=t); tarfile.open(d, 'r:gz').extractall(path=os.path.dirname(d)); \
+    print('✅ Model files downloaded and extracted!')" && \
     echo '✅ Model cached at /root/.cache/huggingface/hub'
 
 # 5. NOW Copy Your Code (The "Light" Layer)
