@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Visa Denied - Browser Client</title>
+    <style>
+        body { font-family: sans-serif; background: #222; color: #eee; padding: 20px; text-align: center; }
+        input { padding: 10px; width: 60%; font-size: 16px; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; background: #007bff; color: white; border: none; }
+        button:disabled { background: #555; }
+        #status { margin-top: 20px; font-weight: bold; }
+        #log { margin-top: 20px; text-align: left; background: #111; padding: 10px; height: 300px; overflow-y: scroll; border: 1px solid #444; font-family: monospace; }
+        .user { color: #aaf; }
+        .bot { color: #afa; }
+        .sys { color: #ff8; }
+    </style>
+</head>
+<body>
+
+    <h1>👮 Visa Denied: Browser Test</h1>
+    
+    <p>Paste your RunPod Proxy URL below (wss://.../api/chat)</p>
+    
+    <input type="text" id="urlInput" placeholder="wss://hftwk8ik5lj66i-8998.proxy.runpod.net/api/chat" value="">
+    <button id="btnConnect" onclick="connect()">Connect & Start Mic</button>
+    <button id="btnStop" onclick="stop()" disabled>Stop</button>
+
+    <div id="status">Status: Disconnected</div>
+    <div id="log"></div>
+
+    <script>
+        let ws;
+        let audioContext;
+        let processor;
+        let globalStream;
+        let isRunning = false;
+        
+        // Audio Params
+        const SAMPLE_RATE = 24000;
+        
+        function log(msg, cls='sys') {
+            const div = document.createElement('div');
+            div.className = cls;
+            div.innerText = msg;
+            document.getElementById('log').prepend(div);
+        }
+
+        async function connect() {
+            const url = document.getElementById('urlInput').value.trim();
+            if (!url) return alert("Please enter a URL");
+            
+            // Use NATM0.pt (Natural Male 0)
+            const fullUrl = `${url}?text_prompt=You+are+Tom.&voice_prompt=NATM0.pt&seed=42`;
+            
+            log(`Connecting to: ${fullUrl}...`);
+            
+            ws = new WebSocket(fullUrl);
+            ws.binaryType = 'arraybuffer';
+            
+            ws.onopen = async () => {
+                log("✅ Connected! Starting Audio...", 'sys');
+                document.getElementById('status').innerText = "Status: Connected (Mic Active)";
+                document.getElementById('btnConnect').disabled = true;
+                document.getElementById('btnStop').disabled = false;
+                isRunning = true;
+                await startAudio();
+            };
+            
+            ws.onmessage = async (event) => {
+                if (typeof event.data === 'string') {
+                    log(`[Server Text]: ${event.data}`, 'bot');
+                } else {
+                    // Binary Audio
+                    handleServerAudio(event.data);
+                }
+            };
+            
+            ws.onclose = () => {
+                log("❌ Disconnected", 'sys');
+                stop();
+            };
+            
+            ws.onerror = (e) => {
+                log("⚠️ Error: " + e, 'sys');
+            };
+        }
+        
+        function stop() {
+            isRunning = false;
+            if (ws) ws.close();
+            if (globalStream) globalStream.getTracks().forEach(t => t.stop());
+            if (audioContext) audioContext.close();
+            document.getElementById('status').innerText = "Status: Disconnected";
+            document.getElementById('btnConnect').disabled = false;
+            document.getElementById('btnStop').disabled = true;
+        }
+
+        async function startAudio() {
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: SAMPLE_RATE });
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                globalStream = stream;
+                
+                const source = audioContext.createMediaStreamSource(stream);
+                // Worklet or ScriptProcessor (ScriptProcessor is deprecated but easier for single file)
+                processor = audioContext.createScriptProcessor(1024, 1, 1);
+                
+                processor.onaudioprocess = (e) => {
+                    if (!isRunning || ws.readyState !== WebSocket.OPEN) return;
+                    
+                    const inputData = e.inputBuffer.getChannelData(0);
+                    // Downconvert float32 to int16
+                    const pcm16 = new Int16Array(inputData.length);
+                    for (let i = 0; i < inputData.length; i++) {
+                        let s = Math.max(-1, Math.min(1, inputData[i]));
+                        pcm16[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+                    }
+                    
+                    // Prepend \x01
+                    const msg = new Uint8Array(1 + pcm16.byteLength);
+                    msg[0] = 0x01; // Audio Kind
+                    msg.set(new Uint8Array(pcm16.buffer), 1);
+                    
+                    ws.send(msg);
+                };
+                
+                source.connect(processor);
+                processor.connect(audioContext.destination);
+                
+                log("🎙️ Microphone Active", 'sys');
+                
+            } catch (e) {
+                log("❌ Mic Error: " + e, 'sys');
+            }
+        }
+        
+        function handleServerAudio(arrayBuffer) {
+            // First byte is kind
+            const view = new DataView(arrayBuffer);
+            const kind = view.getUint8(0);
+            
+            if (kind === 1) { // Audio
+                // Play raw PCM (simplified, usually need a jitter buffer)
+                playPcm(arrayBuffer.slice(1));
+            } else if (kind === 2) { // Text
+               const dec = new TextDecoder();
+               const text = dec.decode(arrayBuffer.slice(1));
+               log(`[Tom]: ${text}`, 'bot');
+            } else if (kind === 0) {
+               log("🤝 Handshake Received", 'sys');
+            }
+        }
+        
+        // Simple queue-based player
+        let nextStartTime = 0;
+        
+        function playPcm(buffer) {
+            // Convert Int16 back to Float32
+            const int16 = new Int16Array(buffer);
+            const float32 = new Float32Array(int16.length);
+            for (let i=0; i<int16.length; i++) {
+                float32[i] = int16[i] / 32768.0;
+            }
+            
+            const audioBuffer = audioContext.createBuffer(1, float32.length, SAMPLE_RATE);
+            audioBuffer.getChannelData(0).set(float32);
+            
+            const source = audioContext.createBufferSource();
+            source.buffer = audioBuffer;
+            source.connect(audioContext.destination);
+            
+            if (nextStartTime < audioContext.currentTime) {
+                nextStartTime = audioContext.currentTime;
+            }
+            source.start(nextStartTime);
+            nextStartTime += audioBuffer.duration;
+        }
+        
+    </script>
+
+</body>
+</html>

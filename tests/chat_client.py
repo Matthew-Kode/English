@@ -105,9 +105,9 @@ class AudioClient:
     async def run(self):
         # Query Params for Persona
         params = {
-            "text_prompt": "You are Tom, a strict US Immigration Officer. You are suspicious of the traveler. Initiate the conversation first. Interrupt them if they stutter.",
-            "voice_prompt": "voice_1.pt", 
-            "seed": "42"
+            "text_prompt": "You are Tom.",
+            "voice_prompt": "NATM0.pt"
+            # "seed": "42"  <-- REMOVED due to server bug (KeyError)
         }
         query_string = urllib.parse.urlencode(params)
         full_uri = f"{self.base_uri}?{query_string}"

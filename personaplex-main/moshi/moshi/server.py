@@ -86,6 +86,52 @@ def wrap_with_system_tags(text: str) -> str:
     return f"<system> {cleaned} <system>"
 
 
+class PcmStreamReader:
+    def __init__(self, sample_rate):
+        self.sample_rate = sample_rate
+        self.buffer = bytearray()
+    
+    def append_bytes(self, data):
+        self.buffer.extend(data)
+        
+    def read_pcm(self):
+        # We need at least 2 bytes for one 16-bit sample
+        if len(self.buffer) < 2:
+            return None
+            
+        # Extract all available even-byte data
+        available = len(self.buffer)
+        if available % 2 != 0:
+            available -= 1
+        
+        data = self.buffer[:available]
+        self.buffer = self.buffer[available:]
+        
+        # Convert PCM16 (bytes) to float32 numpy array [-1, 1]
+        raw_np = np.frombuffer(data, dtype=np.int16)
+        float_np = raw_np.astype(np.float32) / 32768.0
+        
+        # Return as (1, samples) mono
+        return float_np.reshape(1, -1)
+
+class PcmStreamWriter:
+    def __init__(self, sample_rate):
+        self.buffer = bytearray()
+        
+    def append_pcm(self, pcm_np):
+        # pcm_np is float32. Convert to Int16 PCM.
+        # Clip to [-1, 1]
+        pcm_np = np.clip(pcm_np, -1.0, 1.0)
+        # Scale to Int16
+        pcm_int16 = (pcm_np * 32767).astype(np.int16)
+        # Append bytes
+        self.buffer.extend(pcm_int16.tobytes())
+        
+    def read_bytes(self):
+        data = bytes(self.buffer)
+        self.buffer.clear()
+        return data
+
 @dataclass
 class ServerState:
     mimi: MimiModel
@@ -153,11 +199,27 @@ class ServerState:
             requested_voice_prompt_path = None
             if voice_prompt_filename is not None:
                 requested_voice_prompt_path = os.path.join(self.voice_prompt_dir, voice_prompt_filename)
-            # If the voice prompt file does not exist, find a valid (s0) voiceprompt file in the directory
+            
+            # Smart Fallback: If file is missing, list the dir and try to find ANY .pt file
             if requested_voice_prompt_path is None or not os.path.exists(requested_voice_prompt_path):
-                raise FileNotFoundError(
-                    f"Requested voice prompt '{voice_prompt_filename}' not found in '{self.voice_prompt_dir}'"
-                )
+                clog.log("warning", f"Voice prompt '{voice_prompt_filename}' not found. Searching in {self.voice_prompt_dir}...")
+                
+                # List files for debugging (visible in RunPod logs)
+                all_files = []
+                for root, dirs, files in os.walk(self.voice_prompt_dir):
+                    for f in files:
+                        all_files.append(os.path.join(root, f))
+                
+                clog.log("info", f"Files found: {all_files[:10]}...") # Log first 10
+                
+                # Try to find any .pt file
+                fallback_path = next((f for f in all_files if f.endswith('.pt')), None)
+                
+                if fallback_path:
+                    clog.log("info", f"Falling back to: {fallback_path}")
+                    voice_prompt_path = fallback_path
+                else:
+                    raise FileNotFoundError(f"No .pt voice prompts found in {self.voice_prompt_dir}")
             else:
                 voice_prompt_path = requested_voice_prompt_path
                 
@@ -167,8 +229,7 @@ class ServerState:
                 self.lm_gen.load_voice_prompt_embeddings(voice_prompt_path)
             else:
                 self.lm_gen.load_voice_prompt(voice_prompt_path)
-        self.lm_gen.text_prompt_tokens = self.text_tokenizer.encode(wrap_with_system_tags(request.query["text_prompt"])) if len(request.query["text_prompt"]) > 0 else None
-        seed = int(request["seed"]) if "seed" in request.query else None
+        seed = int(request.query["seed"]) if "seed" in request.query else None
 
         async def recv_loop():
             nonlocal close
@@ -209,6 +270,8 @@ class ServerState:
                     return
                 await asyncio.sleep(0.001)
                 pcm = opus_reader.read_pcm()
+                if pcm is None: # Fix: Check for None before accessing shape
+                    continue
                 if pcm.shape[-1] == 0:
                     continue
                 if all_pcm_data is None:
@@ -260,8 +323,8 @@ class ServerState:
             if seed is not None and seed != -1:
                 seed_all(seed)
 
-            opus_writer = sphn.OpusStreamWriter(self.mimi.sample_rate)
-            opus_reader = sphn.OpusStreamReader(self.mimi.sample_rate)
+            opus_writer = PcmStreamWriter(self.mimi.sample_rate) # Switched to PCM Writer
+            opus_reader = PcmStreamReader(self.mimi.sample_rate) # Switched to PCM Reader
             self.mimi.reset_streaming()
             self.other_mimi.reset_streaming()
             self.lm_gen.reset_streaming()

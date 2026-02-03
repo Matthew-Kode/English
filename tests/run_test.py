@@ -8,11 +8,7 @@ init() # Color init
 
 def main():
     print(Fore.CYAN + "=== VISA DENIED: Model Viability Tester ===" + Style.RESET_ALL)
-    print("This script will:")
-    print("1. Boot a real GPU Pod (RTX A5000 / 4090) on RunPod.")
-    print("2. Connect your microphone.")
-    print("3. Let you chat with 'Tom' (Immigration Officer).")
-    print("4. AUTO-KILL the pod when you exit.")
+    print("Mode: MANUAL CLEANUP (Pod will keep running on error)")
     
     confirm = input("Ready to spend ~$0.45/hr (A5000) - $0.70/hr (4090)? (y/n): ")
     if confirm.lower() != 'y':
@@ -21,65 +17,34 @@ def main():
 
     pod_id_input = input("\nEnter Pod ID to resume (or press Enter to search/create): ").strip()
 
-    # Initialize safety wrapper
-    # Our Gold Image with baked-in model weights (Instant Boot!)
+    # Initialize safety wrapper (But we won't use 'with' to keep it running)
     IMAGE = "matthewkode/personaplex:v4" 
     
-    try:
-        with EphemeralPod(image_name=IMAGE, existing_pod_id=pod_id_input) as pod:
-            if not pod.pod_id:
-                print(Fore.RED + "Failed to get Pod ID." + Style.RESET_ALL)
-                return
-            
-            # Allow manual override for faster testing
-            websocket_url = input(f"\n🔍 [Manager] Waiting for ports... \n   (You can paste the Proxy URL from RunPod UI here to skip waiting, or press Enter to keep polling): ").strip()
-            
-            if not websocket_url:
-                websocket_url = pod.get_endpoint()
-            print(Fore.GREEN + f"🔗 Connecting to: {websocket_url}" + Style.RESET_ALL)
-            
-            print(Fore.YELLOW + "Press Ctrl+C to End Chat and KILL POD." + Style.RESET_ALL)
-            time.sleep(2)
-            try:
-                # Main Test Loop
-                # if MAX_SESSION_MINUTES > 0:
-                #     print(f"⏱️  Session Limited to {MAX_SESSION_MINUTES} minutes.")
-                #     # In a real app we'd use a timer thread, here we just trust the user plays along
-                #     # or we wrap chat_client in a timeout.
-                #     pass
-                
-                # Launch Client
-                if websocket_url:
-                    start_client(websocket_url) 
-                else:
-                    print(Fore.RED + "Could not determine socket URL." + Style.RESET_ALL)
-                    pod.debug_info()
-                
-                # Ask user for cleanup preference
-                print("\n" + Fore.CYAN + "--- SESSION COMPLETE ---" + Style.RESET_ALL)
-                choice = input("Clean up: [T]erminate (Delete) or [S]top (Pause for later)? [T/S]: ").lower()
-                if choice == 't':
-                    pod.terminate = True
-                
-            except KeyboardInterrupt:
-                print("\n" + Fore.RED + "Interrupted by User." + Style.RESET_ALL) # Corrected original line
-            
-    except KeyboardInterrupt:
-        print("\n" + Fore.RED + "Interrupted by User." + Style.RESET_ALL)
-        # We can't readily access 'pod' here due to scope, but usually we see debug info above if it failed.
-    except Exception as e:
-        print(f"\n❌ Error: {e}")
-        # If we failed inside the block, we might want debug info.
-        # But 'pod' variable scope is tricky in try/except blocks in Python if defined in __enter__.
-        # Actually, 'pod' is defined.
-        try:
-             # This is a bit hacky to find the pod object if possible, but let's rely on the inner failure printing it.
-             pass
-        except:
-            pass
+    manager = EphemeralPod(image_name=IMAGE, existing_pod_id=pod_id_input)
+    pod = manager.__enter__() # Manually enter but we won't call __exit__ automatically on error
+
+    if not pod.pod_id:
+        print(Fore.RED + "Failed to get Pod ID." + Style.RESET_ALL)
+        return
     
-    # __exit__ should run here automatically
-    print(Fore.CYAN + "=== Test Finished. Pod should be dead. ===" + Style.RESET_ALL)
+    try:
+        # Construct Proxy URL automatically
+        websocket_url = f"wss://{pod.pod_id}-8998.proxy.runpod.net/api/chat"
+        print(Fore.GREEN + f"🔗 Connecting to: {websocket_url}" + Style.RESET_ALL)
+        
+        print(Fore.YELLOW + "Press Ctrl+C to stop the client. POD WILL KEEP RUNNING." + Style.RESET_ALL)
+        time.sleep(1)
+        
+        # Launch Client
+        start_client(websocket_url) 
+        
+    except KeyboardInterrupt:
+        print("\n" + Fore.RED + "Client Stopped by User." + Style.RESET_ALL)
+    except Exception as e:
+        print(f"\n❌ Client Error: {e}")
+    
+    print("\n" + Fore.YELLOW + "⚠️  REMINDER: Pod is still running at " + Fore.WHITE + f"https://console.runpod.io/pods" + Style.RESET_ALL)
+    print(Fore.CYAN + "=== Test Session Finished ===" + Style.RESET_ALL)
 
 if __name__ == "__main__":
     main()
