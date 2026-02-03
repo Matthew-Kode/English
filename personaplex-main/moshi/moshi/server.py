@@ -372,13 +372,13 @@ class ServerState:
                 if all_pcm_data is None:
                     all_pcm_data = pcm
                 else:
-                    all_pcm_data = np.concatenate((all_pcm_data, pcm))
+                    all_pcm_data = np.concatenate((all_pcm_data, pcm), axis=1)
                 while all_pcm_data.shape[-1] >= self.frame_size:
                     be = time.time()
-                    chunk = all_pcm_data[: self.frame_size]
-                    all_pcm_data = all_pcm_data[self.frame_size:]
+                    chunk = all_pcm_data[:, : self.frame_size]
+                    all_pcm_data = all_pcm_data[:, self.frame_size:]
                     chunk = torch.from_numpy(chunk)
-                    chunk = chunk.to(device=self.device)[None, None]
+                    chunk = chunk.to(device=self.device).unsqueeze(0)
                     codes = self.mimi.encode(chunk)
                     _ = self.other_mimi.encode(chunk)
                     for c in range(codes.shape[-1]):
