@@ -17,14 +17,19 @@ ENV TRANSFORMERS_CACHE=/root/.cache/huggingface
 # We do this BEFORE 'COPY . /app'.
 ARG HF_TOKEN
 RUN pip install --no-cache-dir huggingface_hub && \
-    python3 -c "from huggingface_hub import hf_hub_download; import tarfile, os; repo = 'nvidia/personaplex-7b-v1'; token = os.environ.get('HF_TOKEN'); \
-    if not token: print('⚠️ WARNING: HF_TOKEN not provided. Download may fail if repo is private.'); \
-    [hf_hub_download(repo, f, token=token) for f in ['model.safetensors', 'tokenizer-e351c8d8-checkpoint125.safetensors', 'tokenizer_spm_32k_3.model', 'config.json']]; \
-    v_path = hf_hub_download(repo, 'voices.tgz', token=token); \
-    with tarfile.open(v_path, 'r:gz') as tar: tar.extractall(path=os.path.dirname(v_path)); \
-    d_path = hf_hub_download(repo, 'dist.tgz', token=token); \
-    with tarfile.open(d_path, 'r:gz') as tar: tar.extractall(path=os.path.dirname(d_path)); \
-    print('✅ Model files downloaded and extracted!')" && \
+    HF_TOKEN=$HF_TOKEN python3 -c "from huggingface_hub import hf_hub_download; import tarfile, os, sys; \
+    repo = 'nvidia/personaplex-7b-v1'; token = os.environ.get('HF_TOKEN'); \
+    try: \
+        print(f'🚀 Starting download from {repo} (Token provided: {bool(token)})'); \
+        files = ['model.safetensors', 'tokenizer-e351c8d8-checkpoint125.safetensors', 'tokenizer_spm_32k_3.model', 'config.json']; \
+        for f in files: print(f'  Downloading {f}...'); hf_hub_download(repo, f, token=token); \
+        print('  Downloading voices.tgz...'); v_path = hf_hub_download(repo, 'voices.tgz', token=token); \
+        with tarfile.open(v_path, 'r:gz') as tar: tar.extractall(path=os.path.dirname(v_path)); \
+        print('  Downloading dist.tgz...'); d_path = hf_hub_download(repo, 'dist.tgz', token=token); \
+        with tarfile.open(d_path, 'r:gz') as tar: tar.extractall(path=os.path.dirname(d_path)); \
+        print('✅ All model files downloaded and extracted!'); \
+    except Exception as e: \
+        print(f'❌ DOWNLOAD FAILED: {e}'); sys.exit(1)" && \
     echo '✅ Model cached at /root/.cache/huggingface/hub'
 
 # 5. NOW Copy Your Code (The "Light" Layer)
