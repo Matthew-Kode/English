@@ -1,5 +1,6 @@
 ### Agent Guidelines (`GEMINI.md`)
 
+- **THINK QUIETLY:** Use inner thought blocks for all reasoning.
 - Agent only proceeds to code when user approves
 ```markdown
 # 🤖 Project Context: "Visa Denied" (PersonaPlex Combat English)

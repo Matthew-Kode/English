@@ -19,22 +19,23 @@ def main():
         print("Aborted.")
         return
 
+    pod_id_input = input("\nEnter Pod ID to resume (or press Enter to search/create): ").strip()
+
     # Initialize safety wrapper
     # Our Gold Image with baked-in model weights (Instant Boot!)
-    IMAGE = "matthewkode/personaplex:v2" 
+    IMAGE = "matthewkode/personaplex:v4" 
     
     try:
-        with EphemeralPod(image_name=IMAGE) as pod:
+        with EphemeralPod(image_name=IMAGE, existing_pod_id=pod_id_input) as pod:
             if not pod.pod_id:
                 print(Fore.RED + "Failed to get Pod ID." + Style.RESET_ALL)
                 return
             
-            # WAIT loop for service to actually be up (Pod running != App running)
-            print("⏳ Waiting extra 45s for Model Loading (Large Model Cold Boot)...")
-            # We spin-wait or just sleep.
-            time.sleep(45) 
+            # Allow manual override for faster testing
+            websocket_url = input(f"\n🔍 [Manager] Waiting for ports... \n   (You can paste the Proxy URL from RunPod UI here to skip waiting, or press Enter to keep polling): ").strip()
             
-            websocket_url = pod.get_endpoint()
+            if not websocket_url:
+                websocket_url = pod.get_endpoint()
             print(Fore.GREEN + f"🔗 Connecting to: {websocket_url}" + Style.RESET_ALL)
             
             print(Fore.YELLOW + "Press Ctrl+C to End Chat and KILL POD." + Style.RESET_ALL)
@@ -49,10 +50,16 @@ def main():
                 
                 # Launch Client
                 if websocket_url:
-                    start_client(websocket_url) # Assuming start_client is the correct function name
+                    start_client(websocket_url) 
                 else:
                     print(Fore.RED + "Could not determine socket URL." + Style.RESET_ALL)
                     pod.debug_info()
+                
+                # Ask user for cleanup preference
+                print("\n" + Fore.CYAN + "--- SESSION COMPLETE ---" + Style.RESET_ALL)
+                choice = input("Clean up: [T]erminate (Delete) or [S]top (Pause for later)? [T/S]: ").lower()
+                if choice == 't':
+                    pod.terminate = True
                 
             except KeyboardInterrupt:
                 print("\n" + Fore.RED + "Interrupted by User." + Style.RESET_ALL) # Corrected original line

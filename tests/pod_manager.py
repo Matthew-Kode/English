@@ -21,10 +21,11 @@ class EphemeralPod:
     Context Manager to handle RunPod lifecycle safely.
     ensures kill_pod() is called even if code errors out.
     """
-    def __init__(self, image_name="matthewkode/personaplex:v4", gpu_type=None, environment_variables=None):
+    def __init__(self, image_name="matthewkode/personaplex:v4", gpu_type=None, environment_variables=None, terminate=False, existing_pod_id=None):
         self.image_name = image_name
         self.gpu_type = gpu_type or os.getenv("RUNPOD_GPU_TYPE", "NVIDIA RTX A5000")
-        self.pod_id = None
+        self.pod_id = existing_pod_id
+        self.terminate = terminate
         self.env_vars = environment_variables or {}
         # Re-enabling torch.compile since v3 image has build-essential
         self.env_vars["NO_TORCH_COMPILE"] = "0" 
@@ -37,15 +38,47 @@ class EphemeralPod:
         self.docker_password = os.getenv("DOCKER_PASSWORD")
 
     def __enter__(self):
-        print(f"🚀 [Manager] Requesting {self.gpu_type} Pod...")
+        print(f"🚀 [Manager] Searching for pod to resume...")
+        cache_file = ".last_pod_id"
         try:
-            # Build pod creation arguments
+            # 1. Verification Logic
+            existing_pods = runpod.get_pods()
+            target_pod = None
+            
+            # Use provided ID first
+            if self.pod_id:
+                target_pod = next((p for p in existing_pods if p['id'] == self.pod_id), None)
+                if not target_pod:
+                    print(f"⚠️ [Manager] Provided ID {self.pod_id} not found. Searching elsewhere...")
+            
+            # Use local cache file second
+            if not target_pod and os.path.exists(cache_file):
+                with open(cache_file, "r") as f:
+                    cached_id = f.read().strip()
+                    target_pod = next((p for p in existing_pods if p['id'] == cached_id), None)
+            
+            # Fallback to name search third
+            if not target_pod:
+                target_pod = next((p for p in existing_pods if p.get('name') == "Visa-Denied-Tester"), None)
+
+            if target_pod:
+                self.pod_id = target_pod['id']
+                print(f"♻️ [Manager] Resuming pod {self.pod_id}...")
+                with open(cache_file, "w") as f: f.write(self.pod_id) # Update cache
+                
+                status = target_pod.get('status') or (target_pod.get('runtime') or {}).get('status')
+                if status != 'RUNNING':
+                    runpod.resume_pod(self.pod_id, gpu_count=target_pod.get('gpuCount', 1))
+                return self
+
+            # 3. Create new if none found
             pod_args = {
                 "name": "Visa-Denied-Tester",
                 "image_name": self.image_name,
                 "gpu_type_id": self.gpu_type,
                 "cloud_type": "SECURE",
                 "ports": "8998/http",
+                "volume_in_gb": 20,
                 "env": self.env_vars
             }
             
@@ -57,12 +90,8 @@ class EphemeralPod:
             
             pod = runpod.create_pod(**pod_args)
             self.pod_id = pod['id']
+            with open(cache_file, "w") as f: f.write(self.pod_id) # Save to cache
             print(f"✅ [Manager] Pod Created: {self.pod_id}")
-            print("⏳ [Manager] Waiting for Boot (approx 20-30s)...")
-            
-            # Simple polling for 'RUNNING' status
-            # For the MVP validation, we'll let the user wait or implement a status check loop here
-            # But normally we just return the object and let the client logic handle the "Ready" check
             return self
             
         except Exception as e:
@@ -70,71 +99,57 @@ class EphemeralPod:
             raise e
 
     def __exit__(self, exc_type, exc_value, traceback):
-        print("\n🛑 [Manager] Context Exit Triggered. Terminating Pod...")
+        print("\n🛑 [Manager] Context Exit Triggered. Cleaning up Pod...")
+        cache_file = ".last_pod_id"
         if self.pod_id:
             try:
-                runpod.terminate_pod(self.pod_id)
-                print(f"💀 [Manager] Pod {self.pod_id} TERMINATED Successfully.")
+                if self.terminate:
+                    runpod.terminate_pod(self.pod_id)
+                    if os.path.exists(cache_file):
+                        os.remove(cache_file)
+                    print(f"💀 [Manager] Pod {self.pod_id} TERMINATED Successfully.")
+                else:
+                    runpod.stop_pod(self.pod_id)
+                    print(f"⏸️ [Manager] Pod {self.pod_id} STOPPED (Paused) Successfully.")
             except Exception as e:
-                print(f"⚠️ [Manager] FAILED TO TERMINATE POD {self.pod_id}: {e}")
-                print("!!! PLEASE RUN force_kill.py IMMEDIATELY !!!")
+                action = "TERMINATE" if self.terminate else "STOP"
+                print(f"⚠️ [Manager] FAILED TO {action} POD {self.pod_id}: {e}")
         else:
             print("msg: No pod was created, nothing to kill.")
 
     def get_endpoint(self):
         """
-        Fetches the REAL public IP and PORT from RunPod API.
-        Polls until the pod is actually listed as RUNNING and has keys.
+        Returns the Proxy URL as soon as the pod is RUNNING.
         """
         if not self.pod_id:
             return None
             
-        print("🔍 [Manager] Polling for Public IP/Port (this ensures container is ready)...")
-        # Poll for IP/Port - Infinite loop until ready (no timeout for large pulls)
+        print(f"🔍 [Manager] Waiting for pod {self.pod_id} to be RUNNING...")
+        proxy_url = f"wss://{self.pod_id}-8998.proxy.runpod.net/api/chat"
+        
         attempt = 0
         while True:
             attempt += 1
             try:
                 pod_status = runpod.get_pod(self.pod_id)
-                
                 if not pod_status:
-                    print(f"   [Polling #{attempt}] Warning: API returned None. Retrying...")
                     time.sleep(5)
                     continue
 
-                # Check status
-                runtime = pod_status.get('runtime', {})
-                status = runtime.get('status')
+                # Check status across all possible API fields
+                status = (pod_status.get('status') or 
+                          pod_status.get('podStatus') or 
+                          (pod_status.get('runtime') or {}).get('status'))
                 
-                # Check ports
-                ports = runtime.get('ports', [])
-                if ports:
-                    for p in ports:
-                        if p['privatePort'] == 8998:
-                            # Prefer 'address' if provided by newer SDK, otherwise use publicIp
-                            # Note: On some nodes, isIpPublic is False but publicPort is still mapped to the host
-                            
-                            pub_ip = p.get('publicIp') or pod_status.get('address')
-                            
-                            # Fallback if address is missing: some SDKs put it in runtime['address']
-                            if not pub_ip:
-                                pub_ip = runtime.get('address')
-
-                            pub_port = p.get('publicPort')
-                            
-                            if pub_ip and pub_port:
-                                print(f"✅ [Manager] Found Endpoint: {pub_ip}:{pub_port}")
-                                return f"ws://{pub_ip}:{pub_port}/api/chat"
+                if status == 'RUNNING':
+                    print(f"✅ [Manager] Pod is RUNNING. Connecting to Proxy...")
+                    return proxy_url
                 
-                print(f"   [Polling #{attempt}] Status: {status} | Waiting for Port Mappings...")
-                time.sleep(5) # 10s wait between polls
+                print(f"   [Polling #{attempt}] Status: {status}...")
+                time.sleep(5)
             except Exception as e:
-                print(f"   [Polling] Error: {e}")
-                time.sleep(10)
-        
-        print("❌ [Manager] Timed out waiting for Public IP.")
-        # Fallback to proxy if direct fails (though unlikely to work if direct didn't appeared)
-        return f"wss://{self.pod_id}-8998.proxy.runpod.net/api/chat"
+                print(f"   [Polling] Note: {e}")
+                time.sleep(5)
     
     def debug_info(self):
         """Prints raw pod info for debugging."""

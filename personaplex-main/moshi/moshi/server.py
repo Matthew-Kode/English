@@ -476,7 +476,7 @@ def main():
     if setup_tunnel is not None:
         tunnel = setup_tunnel('localhost', args.port, tunnel_token, None)
         logger.info(f"Tunnel started, if executing on a remote GPU, you can use {tunnel}.")
-    web.run_app(app, port=args.port, ssl_context=ssl_context)
+    web.run_app(app, host='0.0.0.0', port=args.port, ssl_context=ssl_context)
 
 
 with torch.no_grad():
