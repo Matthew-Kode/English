@@ -290,9 +290,9 @@ class ServerState:
         requested_voice_prompt_path = None
         voice_prompt_path = None
         if self.voice_prompt_dir is not None:
-            voice_prompt_filename = request.query["voice_prompt"]
+            voice_prompt_filename = request.query.get("voice_prompt", "")
             requested_voice_prompt_path = None
-            if voice_prompt_filename is not None:
+            if voice_prompt_filename:
                 requested_voice_prompt_path = os.path.join(self.voice_prompt_dir, voice_prompt_filename)
             
             # Smart Fallback: If file is missing, list the dir and try to find ANY .pt file
@@ -409,14 +409,22 @@ class ServerState:
                     await ws.send_bytes(b"\x01" + msg)
 
         clog.log("info", "accepted connection")
-        if len(request.query["text_prompt"]) > 0:
-            clog.log("info", f"text prompt: {request.query['text_prompt']}")
-        if len(request.query["voice_prompt"]) > 0:
+        text_prompt = request.query.get("text_prompt", "")
+        if len(text_prompt) > 0:
+            clog.log("info", f"text prompt: {text_prompt}")
+        voice_prompt_requested = request.query.get("voice_prompt", "")
+        if len(voice_prompt_requested) > 0:
             clog.log("info", f"voice prompt: {voice_prompt_path} (requested: {requested_voice_prompt_path})")
         close = False
         async with self.lock:
             if seed is not None and seed != -1:
                 seed_all(seed)
+
+            # Ensure text prompt tokens are set (empty list if not provided).
+            if text_prompt:
+                self.lm_gen.text_prompt_tokens = self.text_tokenizer.encode(wrap_with_system_tags(text_prompt))  # type: ignore
+            else:
+                self.lm_gen.text_prompt_tokens = []
 
             opus_writer = PcmStreamWriter(self.mimi.sample_rate) # Switched to PCM Writer
             opus_reader = PcmStreamReader(self.mimi.sample_rate) # Switched to PCM Reader
