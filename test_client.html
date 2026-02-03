@@ -43,7 +43,7 @@
 
         <div class="section">
             <label for="urlInput">RunPod Proxy URL (wss://.../api/chat)</label>
-            <input type="text" id="urlInput" placeholder="wss://hftwk8ik5lj66i-8998.proxy.runpod.net/api/chat" value="">
+            <input type="text" id="urlInput" placeholder="wss://podid-8998.proxy.runpod.net/api/chat" value="">
             <div class="button-row">
                 <button id="btnConnect" onclick="connect()">Connect & Start Mic</button>
                 <button id="btnStop" onclick="stop()" disabled>Stop</button>
@@ -62,8 +62,20 @@
                 <div class="small">Example: NATM0.pt or an uploaded .wav filename</div>
             </div>
             <div class="field">
-                <label for="tempInput">Temperature: <span id="tempValue">0.8</span></label>
-                <input type="range" id="tempInput" min="0.1" max="1.5" step="0.05" value="0.8">
+                <label for="textTempInput">Text Temperature: <span id="textTempValue">0.7</span></label>
+                <input type="range" id="textTempInput" min="0" max="1.5" step="0.05" value="0.7">
+            </div>
+            <div class="field">
+                <label for="audioTempInput">Audio Temperature: <span id="audioTempValue">0.8</span></label>
+                <input type="range" id="audioTempInput" min="0" max="1.5" step="0.05" value="0.8">
+            </div>
+            <div class="field">
+                <label for="textTopkInput">Text Top-K: <span id="textTopkValue">25</span></label>
+                <input type="range" id="textTopkInput" min="1" max="100" step="1" value="25">
+            </div>
+            <div class="field">
+                <label for="audioTopkInput">Audio Top-K: <span id="audioTopkValue">250</span></label>
+                <input type="range" id="audioTopkInput" min="10" max="500" step="10" value="250">
             </div>
         </div>
 
@@ -151,12 +163,17 @@
 
             const textPrompt = document.getElementById('textPrompt').value.trim();
             const voicePrompt = document.getElementById('voicePrompt').value.trim();
-            const temperature = document.getElementById('tempInput').value;
+            const textTemp = document.getElementById('textTempInput').value;
+            const audioTemp = document.getElementById('audioTempInput').value;
+            const textTopk = document.getElementById('textTopkInput').value;
+            const audioTopk = document.getElementById('audioTopkInput').value;
 
             url.searchParams.set("text_prompt", textPrompt);
             url.searchParams.set("voice_prompt", voicePrompt);
-            url.searchParams.set("text_temperature", temperature);
-            url.searchParams.set("audio_temperature", temperature);
+            url.searchParams.set("text_temperature", textTemp);
+            url.searchParams.set("audio_temperature", audioTemp);
+            url.searchParams.set("text_topk", textTopk);
+            url.searchParams.set("audio_topk", audioTopk);
             url.searchParams.set("seed", DEFAULT_SEED.toString());
 
             return url.toString();
@@ -375,10 +392,28 @@
             }
         });
 
-        const tempInput = document.getElementById('tempInput');
-        const tempValue = document.getElementById('tempValue');
-        tempInput.addEventListener('input', () => {
-            tempValue.innerText = tempInput.value;
+        const textTempInput = document.getElementById('textTempInput');
+        const textTempValue = document.getElementById('textTempValue');
+        textTempInput.addEventListener('input', () => {
+            textTempValue.innerText = textTempInput.value;
+        });
+
+        const audioTempInput = document.getElementById('audioTempInput');
+        const audioTempValue = document.getElementById('audioTempValue');
+        audioTempInput.addEventListener('input', () => {
+            audioTempValue.innerText = audioTempInput.value;
+        });
+
+        const textTopkInput = document.getElementById('textTopkInput');
+        const textTopkValue = document.getElementById('textTopkValue');
+        textTopkInput.addEventListener('input', () => {
+            textTopkValue.innerText = textTopkInput.value;
+        });
+
+        const audioTopkInput = document.getElementById('audioTopkInput');
+        const audioTopkValue = document.getElementById('audioTopkValue');
+        audioTopkInput.addEventListener('input', () => {
+            audioTopkValue.innerText = audioTopkInput.value;
         });
 
         const uploadZone = document.getElementById('uploadZone');

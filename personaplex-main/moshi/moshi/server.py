@@ -282,9 +282,16 @@ class ServerState:
             self.lm_gen.temp = float(request.query["audio_temperature"])
         if "text_temperature" in request.query:
             self.lm_gen.temp_text = float(request.query["text_temperature"])
-        
-        # self.lm_gen.top_k_text = max(1, int(request.query["text_topk"]))
-        # self.lm_gen.top_k = max(1, int(request.query["audio_topk"]))
+        if "text_topk" in request.query:
+            try:
+                self.lm_gen.top_k_text = max(1, int(request.query["text_topk"]))
+            except ValueError:
+                clog.log("warning", f"Invalid text_topk: {request.query['text_topk']}")
+        if "audio_topk" in request.query:
+            try:
+                self.lm_gen.top_k = max(1, int(request.query["audio_topk"]))
+            except ValueError:
+                clog.log("warning", f"Invalid audio_topk: {request.query['audio_topk']}")
         
         # Construct full voice prompt path
         requested_voice_prompt_path = None
