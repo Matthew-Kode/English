@@ -34,6 +34,8 @@ import tarfile
 import time
 import secrets
 import sys
+import re
+import shutil
 from typing import Literal, Optional
 
 import aiohttp
@@ -84,6 +86,95 @@ def wrap_with_system_tags(text: str) -> str:
     if cleaned.startswith("<system>") and cleaned.endswith("<system>"):
         return cleaned
     return f"<system> {cleaned} <system>"
+
+def _cors_headers():
+    return {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, X-Upload-Token",
+        "Access-Control-Max-Age": "86400",
+    }
+
+def _cors_json_response(payload, status: int = 200):
+    return web.json_response(payload, status=status, headers=_cors_headers())
+
+def _sanitize_filename(filename: str) -> str:
+    safe_name = Path(filename).name
+    safe_name = re.sub(r"[^A-Za-z0-9._-]", "_", safe_name)
+    return safe_name or "voice_prompt.wav"
+
+def _unique_path(directory: str, filename: str) -> tuple[str, str]:
+    base, ext = os.path.splitext(filename)
+    candidate = filename
+    counter = 1
+    while os.path.exists(os.path.join(directory, candidate)):
+        candidate = f"{base}_{counter}{ext}"
+        counter += 1
+    return os.path.join(directory, candidate), candidate
+
+async def handle_voice_prompt_options(_request):
+    return web.Response(status=204, headers=_cors_headers())
+
+async def handle_voice_prompt_upload(request):
+    expected_token = os.getenv("UPLOAD_TOKEN")
+    if not expected_token:
+        return _cors_json_response({"error": "UPLOAD_TOKEN not set on server"}, status=503)
+
+    provided = request.headers.get("X-Upload-Token", "")
+    if not secrets.compare_digest(provided, expected_token):
+        return _cors_json_response({"error": "Unauthorized"}, status=401)
+
+    voice_prompt_dir = request.app.get("voice_prompt_dir")
+    if not voice_prompt_dir:
+        return _cors_json_response({"error": "voice_prompt_dir not configured"}, status=500)
+    os.makedirs(voice_prompt_dir, exist_ok=True)
+
+    if not request.content_type.startswith("multipart/"):
+        return _cors_json_response({"error": "Expected multipart/form-data"}, status=400)
+
+    reader = await request.multipart()
+    field = None
+    while True:
+        part = await reader.next()
+        if part is None:
+            break
+        if part.filename:
+            field = part
+            break
+
+    if field is None or not field.filename:
+        return _cors_json_response({"error": "No file uploaded"}, status=400)
+
+    filename = _sanitize_filename(field.filename)
+    if not filename.lower().endswith(".wav"):
+        return _cors_json_response({"error": "Only .wav files are allowed"}, status=400)
+
+    dest_path, final_name = _unique_path(voice_prompt_dir, filename)
+    max_bytes = request.app.get("upload_max_bytes", 25 * 1024 * 1024)
+    size = 0
+
+    try:
+        with open(dest_path, "wb") as f:
+            while True:
+                chunk = await field.read_chunk()
+                if not chunk:
+                    break
+                size += len(chunk)
+                if size > max_bytes:
+                    f.close()
+                    os.remove(dest_path)
+                    return _cors_json_response(
+                        {"error": f"File too large. Max {max_bytes} bytes."},
+                        status=413,
+                    )
+                f.write(chunk)
+    except Exception:
+        if os.path.exists(dest_path):
+            os.remove(dest_path)
+        logger.exception("Upload failed")
+        return _cors_json_response({"error": "Upload failed"}, status=500)
+
+    return _cors_json_response({"filename": final_name, "bytes": size})
 
 
 class PcmStreamReader:
@@ -186,8 +277,12 @@ class ServerState:
         peer_port = request.transport.get_extra_info("peername")[1]  # Port
         clog.log("info", f"Incoming connection from {peer}:{peer_port}")
 
-        # self.lm_gen.temp = float(request.query["audio_temperature"])
-        # self.lm_gen.temp_text = float(request.query["text_temperature"])
+        # Enable dynamic temperature control
+        if "audio_temperature" in request.query:
+            self.lm_gen.temp = float(request.query["audio_temperature"])
+        if "text_temperature" in request.query:
+            self.lm_gen.temp_text = float(request.query["text_temperature"])
+        
         # self.lm_gen.top_k_text = max(1, int(request.query["text_topk"]))
         # self.lm_gen.top_k = max(1, int(request.query["audio_topk"]))
         
@@ -400,6 +495,40 @@ def _get_voice_prompt_dir(voice_prompt_dir: Optional[str], hf_repo: str) -> Opti
 
     return str(voices_dir)
 
+def _has_voice_files(directory: str) -> bool:
+    for root, _dirs, files in os.walk(directory):
+        for name in files:
+            if name.lower().endswith((".pt", ".wav")):
+                return True
+    return False
+
+def _copy_voice_files(src_dir: str, dest_dir: str) -> None:
+    for root, _dirs, files in os.walk(src_dir):
+        rel_root = os.path.relpath(root, src_dir)
+        target_root = dest_dir if rel_root == "." else os.path.join(dest_dir, rel_root)
+        os.makedirs(target_root, exist_ok=True)
+        for name in files:
+            src_path = os.path.join(root, name)
+            dest_path = os.path.join(target_root, name)
+            if not os.path.exists(dest_path):
+                shutil.copy2(src_path, dest_path)
+
+def _resolve_voice_prompt_dir(voice_prompt_dir: Optional[str], hf_repo: str) -> Optional[str]:
+    if voice_prompt_dir is not None:
+        return voice_prompt_dir
+    env_dir = os.getenv("VOICE_PROMPT_DIR")
+    if env_dir:
+        return env_dir
+    default_dir = "/workspace/voices"
+    os.makedirs(default_dir, exist_ok=True)
+    if not _has_voice_files(default_dir):
+        try:
+            hf_dir = _get_voice_prompt_dir(None, hf_repo)
+            _copy_voice_files(hf_dir, default_dir)
+        except Exception:
+            logger.warning("Failed to populate %s from HF voices", default_dir, exc_info=True)
+    return default_dir
+
 
 def _get_static_path(static: Optional[str]) -> Optional[str]:
     if static is None:
@@ -455,11 +584,12 @@ def main():
     )
 
     args = parser.parse_args()
-    args.voice_prompt_dir = _get_voice_prompt_dir(
+    args.voice_prompt_dir = _resolve_voice_prompt_dir(
         args.voice_prompt_dir,
         args.hf_repo,
     )
     if args.voice_prompt_dir is not None:
+        os.makedirs(args.voice_prompt_dir, exist_ok=True)
         assert os.path.exists(args.voice_prompt_dir), \
             f"Directory missing: {args.voice_prompt_dir}"
     logger.info(f"voice_prompt_dir = {args.voice_prompt_dir}")
@@ -519,8 +649,14 @@ def main():
     )
     logger.info("warming up the model")
     state.warmup()
-    app = web.Application()
+    upload_max_mb = int(os.getenv("UPLOAD_MAX_MB", "25"))
+    upload_max_bytes = upload_max_mb * 1024 * 1024
+    app = web.Application(client_max_size=upload_max_bytes)
+    app["voice_prompt_dir"] = args.voice_prompt_dir
+    app["upload_max_bytes"] = upload_max_bytes
     app.router.add_get("/api/chat", state.handle_chat)
+    app.router.add_post("/api/voice_prompt", handle_voice_prompt_upload)
+    app.router.add_options("/api/voice_prompt", handle_voice_prompt_options)
     if static_path is not None:
         async def handle_root(_):
             return web.FileResponse(os.path.join(static_path, "index.html"))

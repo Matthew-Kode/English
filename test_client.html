@@ -1,15 +1,36 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Visa Denied - Browser Client</title>
     <style>
         body { font-family: sans-serif; background: #222; color: #eee; padding: 20px; text-align: center; }
-        input { padding: 10px; width: 60%; font-size: 16px; }
-        button { padding: 10px 20px; font-size: 16px; cursor: pointer; background: #007bff; color: white; border: none; }
+        .main { max-width: 960px; margin: 0 auto; }
+        .section { margin-top: 16px; text-align: left; background: #1a1a1a; padding: 16px; border: 1px solid #333; border-radius: 8px; }
+        .section-title { font-weight: 700; margin-bottom: 12px; }
+        .field { margin-bottom: 12px; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; }
+        input[type="text"], input[type="url"], textarea {
+            padding: 10px;
+            width: 100%;
+            font-size: 16px;
+            box-sizing: border-box;
+            background: #111;
+            color: #eee;
+            border: 1px solid #444;
+            border-radius: 6px;
+        }
+        textarea { min-height: 90px; resize: vertical; }
+        input[type="range"] { width: 100%; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 6px; }
         button:disabled { background: #555; }
+        .button-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
         #status { margin-top: 20px; font-weight: bold; }
         #log { margin-top: 20px; text-align: left; background: #111; padding: 10px; height: 300px; overflow-y: scroll; border: 1px solid #444; font-family: monospace; }
+        #uploadZone { border: 2px dashed #555; padding: 18px; text-align: center; border-radius: 8px; cursor: pointer; }
+        #uploadZone.dragover { border-color: #00bcd4; color: #00bcd4; }
+        #uploadInput { display: none; }
+        .small { font-size: 12px; color: #bbb; }
         .user { color: #aaf; }
         .bot { color: #afa; }
         .sys { color: #ff8; }
@@ -17,16 +38,49 @@
 </head>
 <body>
 
-    <h1>👮 Visa Denied: Browser Test</h1>
-    
-    <p>Paste your RunPod Proxy URL below (wss://.../api/chat)</p>
-    
-    <input type="text" id="urlInput" placeholder="wss://hftwk8ik5lj66i-8998.proxy.runpod.net/api/chat" value="">
-    <button id="btnConnect" onclick="connect()">Connect & Start Mic</button>
-    <button id="btnStop" onclick="stop()" disabled>Stop</button>
+    <div class="main">
+        <h1>Visa Denied: Browser Test</h1>
 
-    <div id="status">Status: Disconnected</div>
-    <div id="log"></div>
+        <div class="section">
+            <label for="urlInput">RunPod Proxy URL (wss://.../api/chat)</label>
+            <input type="text" id="urlInput" placeholder="wss://hftwk8ik5lj66i-8998.proxy.runpod.net/api/chat" value="">
+            <div class="button-row">
+                <button id="btnConnect" onclick="connect()">Connect & Start Mic</button>
+                <button id="btnStop" onclick="stop()" disabled>Stop</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Model Params</div>
+            <div class="field">
+                <label for="textPrompt">Text Prompt</label>
+                <textarea id="textPrompt">You are Tom.</textarea>
+            </div>
+            <div class="field">
+                <label for="voicePrompt">Voice Prompt (filename)</label>
+                <input type="text" id="voicePrompt" value="NATM0.pt">
+                <div class="small">Example: NATM0.pt or an uploaded .wav filename</div>
+            </div>
+            <div class="field">
+                <label for="tempInput">Temperature: <span id="tempValue">0.8</span></label>
+                <input type="range" id="tempInput" min="0.1" max="1.5" step="0.05" value="0.8">
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Upload Voice Prompt (WAV)</div>
+            <div class="field">
+                <label for="uploadToken">Upload Token</label>
+                <input type="text" id="uploadToken" placeholder="Set UPLOAD_TOKEN on server and paste it here">
+            </div>
+            <div id="uploadZone">Drop a .wav file here or click to choose</div>
+            <input type="file" id="uploadInput" accept=".wav,audio/wav">
+            <div id="uploadStatus" class="small"></div>
+        </div>
+
+        <div id="status">Status: Disconnected</div>
+        <div id="log"></div>
+    </div>
 
     <script>
         let ws;
@@ -34,10 +88,42 @@
         let processor;
         let globalStream;
         let isRunning = false;
-        
+
         // Audio Params
         const SAMPLE_RATE = 24000;
-        
+        const DEFAULT_SEED = 42;
+        const URL_STORAGE_KEY = "visaDenied.lastWsUrl";
+
+        function guessWsUrlFromLocation() {
+            if (window.location.protocol === "https:") {
+                return `wss://${window.location.host}/api/chat`;
+            }
+            if (window.location.protocol === "http:") {
+                return `ws://${window.location.host}/api/chat`;
+            }
+            return "";
+        }
+
+        function autoFillUrl() {
+            const input = document.getElementById('urlInput');
+            if (!input || input.value.trim()) return;
+            const params = new URLSearchParams(window.location.search);
+            const fromQuery = params.get("ws") || params.get("url");
+            if (fromQuery) {
+                input.value = fromQuery;
+                return;
+            }
+            const fromStorage = localStorage.getItem(URL_STORAGE_KEY);
+            if (fromStorage) {
+                input.value = fromStorage;
+                return;
+            }
+            const guessed = guessWsUrlFromLocation();
+            if (guessed) {
+                input.value = guessed;
+            }
+        }
+
         function log(msg, cls='sys') {
             const div = document.createElement('div');
             div.className = cls;
@@ -45,27 +131,130 @@
             document.getElementById('log').prepend(div);
         }
 
+        function setUploadStatus(msg, cls='sys') {
+            const el = document.getElementById('uploadStatus');
+            el.className = `small ${cls}`;
+            el.innerText = msg;
+        }
+
+        function buildWsUrl() {
+            const rawUrl = document.getElementById('urlInput').value.trim();
+            if (!rawUrl) {
+                throw new Error("Please enter a URL");
+            }
+            let url;
+            try {
+                url = new URL(rawUrl);
+            } catch (e) {
+                throw new Error("Invalid URL");
+            }
+
+            const textPrompt = document.getElementById('textPrompt').value.trim();
+            const voicePrompt = document.getElementById('voicePrompt').value.trim();
+            const temperature = document.getElementById('tempInput').value;
+
+            url.searchParams.set("text_prompt", textPrompt);
+            url.searchParams.set("voice_prompt", voicePrompt);
+            url.searchParams.set("text_temperature", temperature);
+            url.searchParams.set("audio_temperature", temperature);
+            url.searchParams.set("seed", DEFAULT_SEED.toString());
+
+            return url.toString();
+        }
+
+        function buildUploadUrl() {
+            const rawUrl = document.getElementById('urlInput').value.trim();
+            if (!rawUrl) {
+                throw new Error("Please enter a URL");
+            }
+            let url;
+            try {
+                url = new URL(rawUrl);
+            } catch (e) {
+                throw new Error("Invalid URL");
+            }
+            if (url.protocol === "wss:") {
+                url.protocol = "https:";
+            } else if (url.protocol === "ws:") {
+                url.protocol = "http:";
+            }
+            url.pathname = "/api/voice_prompt";
+            url.search = "";
+            return url.toString();
+        }
+
+        async function uploadFile(file) {
+            if (!file) return;
+            if (!file.name.toLowerCase().endsWith(".wav")) {
+                setUploadStatus("Only .wav files are allowed.", "sys");
+                return;
+            }
+            const token = document.getElementById('uploadToken').value.trim();
+            if (!token) {
+                setUploadStatus("Upload token is required.", "sys");
+                return;
+            }
+
+            let uploadUrl;
+            try {
+                uploadUrl = buildUploadUrl();
+            } catch (e) {
+                setUploadStatus(e.message, "sys");
+                return;
+            }
+
+            setUploadStatus(`Uploading ${file.name}...`, "sys");
+
+            const formData = new FormData();
+            formData.append("file", file, file.name);
+
+            try {
+                const resp = await fetch(uploadUrl, {
+                    method: "POST",
+                    headers: { "X-Upload-Token": token },
+                    body: formData
+                });
+                const data = await resp.json().catch(() => ({}));
+                if (!resp.ok) {
+                    setUploadStatus(data.error || "Upload failed.", "sys");
+                    return;
+                }
+                document.getElementById('voicePrompt').value = data.filename || file.name;
+                setUploadStatus(`Uploaded: ${data.filename || file.name}`, "sys");
+            } catch (e) {
+                setUploadStatus(`Upload error: ${e}`, "sys");
+            }
+        }
+
         async function connect() {
-            const url = document.getElementById('urlInput').value.trim();
-            if (!url) return alert("Please enter a URL");
-            
-            // Use NATM0.pt (Natural Male 0)
-            const fullUrl = `${url}?text_prompt=You+are+Tom.&voice_prompt=NATM0.pt&seed=42`;
-            
+            let fullUrl;
+            try {
+                fullUrl = buildWsUrl();
+            } catch (e) {
+                alert(e.message);
+                return;
+            }
+
+            const rawUrl = document.getElementById('urlInput').value.trim();
+            if (rawUrl) {
+                localStorage.setItem(URL_STORAGE_KEY, rawUrl);
+            }
+
             log(`Connecting to: ${fullUrl}...`);
-            
+
             ws = new WebSocket(fullUrl);
             ws.binaryType = 'arraybuffer';
-            
+
             ws.onopen = async () => {
-                log("✅ Connected! Starting Audio...", 'sys');
+                log("Connected! Starting Audio...", 'sys');
                 document.getElementById('status').innerText = "Status: Connected (Mic Active)";
                 document.getElementById('btnConnect').disabled = true;
                 document.getElementById('btnStop').disabled = false;
                 isRunning = true;
+                nextStartTime = 0;
                 await startAudio();
             };
-            
+
             ws.onmessage = async (event) => {
                 if (typeof event.data === 'string') {
                     log(`[Server Text]: ${event.data}`, 'bot');
@@ -74,17 +263,17 @@
                     handleServerAudio(event.data);
                 }
             };
-            
+
             ws.onclose = () => {
-                log("❌ Disconnected", 'sys');
+                log("Disconnected", 'sys');
                 stop();
             };
-            
+
             ws.onerror = (e) => {
-                log("⚠️ Error: " + e, 'sys');
+                log("Error: " + e, 'sys');
             };
         }
-        
+
         function stop() {
             isRunning = false;
             if (ws) ws.close();
@@ -93,6 +282,7 @@
             document.getElementById('status').innerText = "Status: Disconnected";
             document.getElementById('btnConnect').disabled = false;
             document.getElementById('btnStop').disabled = true;
+            nextStartTime = 0;
         }
 
         async function startAudio() {
@@ -100,14 +290,14 @@
                 audioContext = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: SAMPLE_RATE });
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 globalStream = stream;
-                
+
                 const source = audioContext.createMediaStreamSource(stream);
                 // Worklet or ScriptProcessor (ScriptProcessor is deprecated but easier for single file)
                 processor = audioContext.createScriptProcessor(1024, 1, 1);
-                
+
                 processor.onaudioprocess = (e) => {
                     if (!isRunning || ws.readyState !== WebSocket.OPEN) return;
-                    
+
                     const inputData = e.inputBuffer.getChannelData(0);
                     // Downconvert float32 to int16
                     const pcm16 = new Int16Array(inputData.length);
@@ -115,30 +305,30 @@
                         let s = Math.max(-1, Math.min(1, inputData[i]));
                         pcm16[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
                     }
-                    
+
                     // Prepend \x01
                     const msg = new Uint8Array(1 + pcm16.byteLength);
                     msg[0] = 0x01; // Audio Kind
                     msg.set(new Uint8Array(pcm16.buffer), 1);
-                    
+
                     ws.send(msg);
                 };
-                
+
                 source.connect(processor);
                 processor.connect(audioContext.destination);
-                
-                log("🎙️ Microphone Active", 'sys');
-                
+
+                log("Microphone Active", 'sys');
+
             } catch (e) {
-                log("❌ Mic Error: " + e, 'sys');
+                log("Mic Error: " + e, 'sys');
             }
         }
-        
+
         function handleServerAudio(arrayBuffer) {
             // First byte is kind
             const view = new DataView(arrayBuffer);
             const kind = view.getUint8(0);
-            
+
             if (kind === 1) { // Audio
                 // Play raw PCM (simplified, usually need a jitter buffer)
                 playPcm(arrayBuffer.slice(1));
@@ -147,13 +337,13 @@
                const text = dec.decode(arrayBuffer.slice(1));
                log(`[Tom]: ${text}`, 'bot');
             } else if (kind === 0) {
-               log("🤝 Handshake Received", 'sys');
+               log("Handshake Received", 'sys');
             }
         }
-        
+
         // Simple queue-based player
         let nextStartTime = 0;
-        
+
         function playPcm(buffer) {
             // Convert Int16 back to Float32
             const int16 = new Int16Array(buffer);
@@ -161,21 +351,61 @@
             for (let i=0; i<int16.length; i++) {
                 float32[i] = int16[i] / 32768.0;
             }
-            
+
             const audioBuffer = audioContext.createBuffer(1, float32.length, SAMPLE_RATE);
             audioBuffer.getChannelData(0).set(float32);
-            
+
             const source = audioContext.createBufferSource();
             source.buffer = audioBuffer;
             source.connect(audioContext.destination);
-            
+
             if (nextStartTime < audioContext.currentTime) {
                 nextStartTime = audioContext.currentTime;
             }
             source.start(nextStartTime);
             nextStartTime += audioBuffer.duration;
         }
-        
+
+        // UI wiring
+        const urlInput = document.getElementById('urlInput');
+        urlInput.addEventListener('change', () => {
+            const val = urlInput.value.trim();
+            if (val) {
+                localStorage.setItem(URL_STORAGE_KEY, val);
+            }
+        });
+
+        const tempInput = document.getElementById('tempInput');
+        const tempValue = document.getElementById('tempValue');
+        tempInput.addEventListener('input', () => {
+            tempValue.innerText = tempInput.value;
+        });
+
+        const uploadZone = document.getElementById('uploadZone');
+        const uploadInput = document.getElementById('uploadInput');
+
+        uploadZone.addEventListener('click', () => uploadInput.click());
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('dragover');
+        });
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('dragover');
+        });
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('dragover');
+            const file = e.dataTransfer.files && e.dataTransfer.files[0];
+            uploadFile(file);
+        });
+        uploadInput.addEventListener('change', () => {
+            const file = uploadInput.files && uploadInput.files[0];
+            uploadFile(file);
+            uploadInput.value = "";
+        });
+
+        autoFillUrl();
+
     </script>
 
 </body>
