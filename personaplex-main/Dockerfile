@@ -16,7 +16,8 @@ ENV TRANSFORMERS_CACHE=/root/.cache/huggingface
 # 4. DOWNLOAD MODEL WEIGHTS (The "Heavy" Layer)
 # We do this BEFORE 'COPY . /app'.
 ARG HF_TOKEN
-RUN if [ -n "$HF_TOKEN" ]; then \
+RUN pip install --no-cache-dir huggingface_hub && \
+    if [ -n "$HF_TOKEN" ]; then \
     huggingface-cli login --token $HF_TOKEN && \
     python3 -c "from huggingface_hub import hf_hub_download; import tarfile, os; repo = 'nvidia/personaplex-7b-v1'; \
     [hf_hub_download(repo, f) for f in ['model.safetensors', 'tokenizer-e351c8d8-checkpoint125.safetensors', 'tokenizer_spm_32k_3.model', 'config.json']]; \
